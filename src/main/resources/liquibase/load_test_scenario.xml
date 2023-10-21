@@ -1,0 +1,40 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="load_test_id_seq" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="load_test_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="load_test_id_seq" incrementBy="1" cacheSize="50" startValue="1"/>
+    </changeSet>
+    <changeSet id="load_test" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="load_test"/>
+            </not>
+        </preConditions>
+        <createTable tableName="load_test" remarks="Нагрузочные тесты">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="load_test_id_seq" >
+                <constraints nullable="false" primaryKey="true" primaryKeyName="load_test__id_idx"/>
+            </column>
+            <column name="load_generator_type" type="TEXT" remarks="Система, которая генерирует нагрузку">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="text" remarks="статус теста">
+                <constraints nullable="false"/>
+            </column>
+            <column name="session_id" type="text" remarks="id сессии">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
+                    remarks="Дата создания записи">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

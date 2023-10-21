@@ -1,0 +1,21 @@
+!!edikgoose.loadgenerator.yandex.tank.config.YandexTankConfig
+phantom:
+  address: 192.168.166.19:8080
+  header_http: "1.1"
+  headers:
+    - "[Host: 192.168.166.19]"
+    - "[Connection: close]"
+  uris:
+    - /get-hello
+  load_profile:
+    load_type: rps
+    schedule: line(10, 1000, 1m)
+
+console:
+  enabled: true
+
+influx:
+  enabled: true
+  address: influx
+  database: metrics
+  tank_tag: 'mytank'
