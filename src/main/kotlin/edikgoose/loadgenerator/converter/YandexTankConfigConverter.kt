@@ -9,7 +9,7 @@ import org.yaml.snakeyaml.Yaml
 
 @Component
 class YandexTankConfigConverter {
-    fun convert(loadTestParams: LoadTestParams): String {
+    fun convert(loadTestParams: LoadTestParams, id: String): String {
         val options = DumperOptions()
         options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
         options.isPrettyFlow = true
@@ -21,6 +21,7 @@ class YandexTankConfigConverter {
         val yaml = Yaml(options)
         val yandexTankConfig: YandexTankConfig = yaml.load(inputStream)
 
+//        yandexTankConfig.influx?.prefix_measurement = id
         yandexTankConfig.phantom?.address = loadTestParams.endpoint
         yandexTankConfig.phantom?.load_profile?.schedule = loadTestParams.loadGenerationSchedule
         yandexTankConfig.phantom?.headers = yandexTankConfig.phantom?.headers
@@ -30,6 +31,7 @@ class YandexTankConfigConverter {
             }
 
         val configString = yaml.dump(yandexTankConfig)
+
         return configString.substringAfter("\n")
     }
 }
