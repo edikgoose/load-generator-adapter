@@ -1,14 +1,20 @@
 package edikgoose.loadgenerator.feign
 
 import edikgoose.loadgenerator.dto.LoadTestStartInformation
+import edikgoose.loadgenerator.dto.LoadTestStatus
 import org.springframework.http.MediaType
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestParam
 
 interface YandexTankApiClient {
-    @PostMapping(path = ["/run"], consumes = [MediaType.TEXT_PLAIN_VALUE], produces = [MediaType.TEXT_PLAIN_VALUE])
+    @PostMapping(
+        path = ["/run"],
+        consumes = [MediaType.TEXT_PLAIN_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
     fun runLoadTest(config: String): LoadTestStartInformation
-}
 
-/*
-2023-10-29 02:05:52 2023-10-28 23:05:52,54 "console:\n  enabled: true\ninflux:\n  address: influx\n  database: metrics\n  enabled: true\n  prefix_measurement: cbe1828b-cde8-4767-8e80-152fbf6942f8\n  tank_tag: mytank\nphantom:\n  address: http://localhost\n  header_http: '1.1'\n  headers:\n  - '[Host: http]'\n  load_profile:\n    load_type: rps\n    schedule: line(1, 100, 1m)\n  uris:\n  - /\ntelegraf:\n  enabled: false\n"]
- */
+    @GetMapping(path = ["/status"], produces = [MediaType.APPLICATION_JSON_VALUE])
+    fun getLoadTestStatus(@RequestParam(name = "session") loadTestId: String): LoadTestStatus
+}

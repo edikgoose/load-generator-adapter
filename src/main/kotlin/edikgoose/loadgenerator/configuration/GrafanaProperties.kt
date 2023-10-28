@@ -5,6 +5,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ConfigurationProperties("load-generator-engine.grafana")
-class GrafanaProperties (
+class GrafanaProperties(
     var baseUrl: String = ""
 )

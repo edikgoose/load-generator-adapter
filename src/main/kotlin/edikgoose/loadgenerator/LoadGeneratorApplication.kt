@@ -9,5 +9,5 @@ import org.springframework.boot.runApplication
 class LoadGeneratorApplication
 
 fun main(args: Array<String>) {
-	runApplication<LoadGeneratorApplication>(*args)
+    runApplication<LoadGeneratorApplication>(*args)
 }
