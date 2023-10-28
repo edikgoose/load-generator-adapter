@@ -1,16 +1,16 @@
 package edikgoose.loadgenerator.service
 
 import edikgoose.loadgenerator.configuration.GrafanaProperties
-import edikgoose.loadgenerator.configuration.YandexTankProperties
 import edikgoose.loadgenerator.converter.YandexTankConfigConverter
 import edikgoose.loadgenerator.dto.LoadTestParams
+import edikgoose.loadgenerator.dto.LoadTestStartInformation
 import edikgoose.loadgenerator.exception.RestTemplateServerException
+import edikgoose.loadgenerator.feign.YandexTankApiClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.net.URI
@@ -19,16 +19,15 @@ import java.util.*
 
 @Service
 class LoadTestService(
-    val yandexTankProperties: YandexTankProperties,
     val grafanaProperties: GrafanaProperties,
     val yandexTankConfigConverter: YandexTankConfigConverter,
+    val yandexTankApiClient: YandexTankApiClient
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestService::class.java)
     val restTemplate: RestTemplate = RestTemplate()
 
-    fun runLoadTest(loadTestParams: LoadTestParams): ResponseEntity<String> {
+    fun runLoadTest(loadTestParams: LoadTestParams): LoadTestStartInformation {
         val id: String = UUID.randomUUID().toString()
-//        pushNewDashboard(id)
         return startTest(loadTestParams, id)
     }
 
@@ -57,23 +56,10 @@ class LoadTestService(
         }
     }
 
-    private fun startTest(loadTestParams: LoadTestParams, id: String): ResponseEntity<String> {
+    private fun startTest(loadTestParams: LoadTestParams, id: String): LoadTestStartInformation {
         val config = yandexTankConfigConverter.convert(loadTestParams, id)
-        logger.info("Config for Yandex tank: $config")
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.TEXT_PLAIN
-
-        val request = HttpEntity(config, headers)
-        val url = yandexTankProperties.baseUrl
-
-        val uri = URI.create("http://$url/run")
-
-        try {
-            return restTemplate.postForEntity(uri, request, String::class.java)
-        } catch (e: RuntimeException) {
-            logger.error("Error during request to yandex tank: ", e.cause)
-            throw RestTemplateServerException(e.message!!, e.cause)
-        }
+        logger.info("Config for Yandex tank:\n$config")
+        return yandexTankApiClient.runLoadTest(config)
     }
 
 }

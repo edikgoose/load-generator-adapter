@@ -21,13 +21,14 @@ class YandexTankConfigConverter {
         val yaml = Yaml(options)
         val yandexTankConfig: YandexTankConfig = yaml.load(inputStream)
 
-//        yandexTankConfig.influx?.prefix_measurement = id
-        yandexTankConfig.phantom?.address = loadTestParams.endpoint
+        yandexTankConfig.influx?.prefix_measurement = id
+        yandexTankConfig.phantom?.address = loadTestParams.address
         yandexTankConfig.phantom?.load_profile?.schedule = loadTestParams.loadGenerationSchedule
+        yandexTankConfig.phantom?.uris = loadTestParams.uris.toList()
         yandexTankConfig.phantom?.headers = yandexTankConfig.phantom?.headers
             ?.filter { it.contains("Host") }
             ?.map {
-                "[Host: ${loadTestParams.endpoint.substringBefore(':')}]"
+                "[Host: ${loadTestParams.address.substringBefore(':')}]"
             }
 
         val configString = yaml.dump(yandexTankConfig)
