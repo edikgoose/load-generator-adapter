@@ -1,5 +1,5 @@
 package edikgoose.loadgenerator.dto
 
-data class LoadTestStartInformation(
+data class LoadTestStartInformationDto(
     val session: String
 )

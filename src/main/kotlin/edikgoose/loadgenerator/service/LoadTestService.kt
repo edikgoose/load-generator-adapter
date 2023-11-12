@@ -2,9 +2,10 @@ package edikgoose.loadgenerator.service
 
 import edikgoose.loadgenerator.configuration.GrafanaProperties
 import edikgoose.loadgenerator.converter.YandexTankConfigConverter
-import edikgoose.loadgenerator.dto.LoadTestParams
-import edikgoose.loadgenerator.dto.LoadTestStartInformation
-import edikgoose.loadgenerator.dto.LoadTestStatus
+import edikgoose.loadgenerator.dto.LoadTestParamsDto
+import edikgoose.loadgenerator.dto.LoadTestStartInformationDto
+import edikgoose.loadgenerator.dto.LoadTestStatusDto
+import edikgoose.loadgenerator.dto.LoadTestStopResponseDto
 import edikgoose.loadgenerator.feign.YandexTankApiClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -19,19 +20,22 @@ class LoadTestService(
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestService::class.java)
 
-    fun runLoadTest(loadTestParams: LoadTestParams): LoadTestStartInformation {
+    fun runLoadTest(loadTestParamsDto: LoadTestParamsDto): LoadTestStartInformationDto {
         val id: String = UUID.randomUUID().toString()
-        return startTest(loadTestParams, id)
+        return startTest(loadTestParamsDto, id)
     }
 
-    fun stopLoadTest(loadTestId: String): LoadTestStatus {
+    fun getLoadTestStatus(loadTestId: String): LoadTestStatusDto {
         return yandexTankApiClient.getLoadTestStatus(loadTestId)
     }
 
-    private fun startTest(loadTestParams: LoadTestParams, id: String): LoadTestStartInformation {
-        val config = yandexTankConfigConverter.convert(loadTestParams, id)
+    fun stopLoadTest(loadTestId: String): LoadTestStopResponseDto {
+        return yandexTankApiClient.stopLoadTest(loadTestId)
+    }
+
+    private fun startTest(loadTestParamsDto: LoadTestParamsDto, id: String): LoadTestStartInformationDto {
+        val config = yandexTankConfigConverter.convert(loadTestParamsDto, id)
         logger.info("Config for Yandex tank:\n$config")
         return yandexTankApiClient.runLoadTest(config)
     }
-
 }
