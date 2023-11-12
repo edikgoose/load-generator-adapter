@@ -100,7 +100,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_meta",
+          "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -210,7 +210,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -321,7 +321,7 @@
             }
           ],
           "hide": false,
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "autogen",
           "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -434,7 +434,7 @@
             }
           ],
           "hide": false,
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "autogen",
           "query": "SELECT mean(\"404\")  FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -547,7 +547,7 @@
             }
           ],
           "hide": false,
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "autogen",
           "query": "SELECT mean(\"504\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time(10s) fill(0)",
@@ -660,7 +660,7 @@
             }
           ],
           "hide": false,
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "autogen",
           "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -773,7 +773,7 @@
             }
           ],
           "hide": false,
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "autogen",
           "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -886,7 +886,7 @@
             }
           ],
           "hide": false,
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "autogen",
           "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -997,7 +997,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_quantiles",
+          "measurement": "1_overall_quantiles",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "A",
@@ -1188,7 +1188,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_meta",
+          "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "autogen",
           "refId": "B",
@@ -1320,7 +1320,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_meta",
+          "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -1361,7 +1361,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_meta",
+          "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "B",
@@ -1495,7 +1495,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "proto_codes",
+          "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -1650,7 +1650,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_meta",
+          "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "B",
@@ -1781,7 +1781,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "net_codes",
+          "measurement": "1_net_codes",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "A",
@@ -1882,7 +1882,7 @@
               "type": "fill"
             }
           ],
-          "measurement": "overall_meta",
+          "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
           "refId": "B",

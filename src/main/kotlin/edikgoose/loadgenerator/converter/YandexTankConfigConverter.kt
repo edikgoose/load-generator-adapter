@@ -36,7 +36,7 @@ fun LoadTestParamsDto.convertToLoadTest(): LoadTest {
         externalId = null,
         grafanaUrl = null,
         loadGeneratorEngine = this.loadGeneratorEngine,
-        status = LoadTestStatus.RUNNING,
+        status = LoadTestStatus.CREATED,
         address = "${this.hostName}:${this.port}",
         uris = this.uris,
         loadScheme = this.loadScheme

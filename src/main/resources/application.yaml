@@ -31,5 +31,7 @@ load-generator-engine:
 
   grafana:
     base-url: ${GRAFANA_BASE_URL:grafana:3000}
+    username: ${GRAFANA_USERNAME:admin}
+    password: ${GRAFANA_PASSWORD:admin}
 
 

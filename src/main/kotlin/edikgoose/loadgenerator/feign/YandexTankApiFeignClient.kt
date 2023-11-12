@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 
-interface YandexTankApiClient {
+interface YandexTankApiFeignClient {
     @PostMapping(
         path = ["/run"],
         consumes = [MediaType.TEXT_PLAIN_VALUE],

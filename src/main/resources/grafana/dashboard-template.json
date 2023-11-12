@@ -9,18 +9,18 @@
     "slug": "overload",
     "url": "/d/metrics/overload",
     "expires": "0001-01-01T00:00:00Z",
-    "created": "2023-10-21T20:57:10Z",
-    "updated": "2023-10-21T20:57:10Z",
-    "updatedBy": "Anonymous",
+    "created": "2023-11-12T17:15:52Z",
+    "updated": "2023-11-12T17:37:07Z",
+    "updatedBy": "admin",
     "createdBy": "Anonymous",
-    "version": 1,
+    "version": 2,
     "hasAcl": false,
     "isFolder": false,
     "folderId": 0,
     "folderUid": "",
     "folderTitle": "General",
     "folderUrl": "",
-    "provisioned": true,
+    "provisioned": false,
     "provisionedExternalId": "dashboard.json",
     "annotationsPermissions": {
       "dashboard": {
@@ -59,7 +59,9 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 1,
+    "id": null,
+    "uid": "metrics_{id}",
+    "title": "Overload_{id}",
     "links": [],
     "liveNow": false,
     "panels": [
@@ -141,7 +143,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_meta",
+            "measurement": "{id}_overall_meta",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "A",
@@ -195,8 +197,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#d44a3a"
@@ -251,7 +252,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "A",
@@ -305,8 +306,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#37872D"
@@ -362,7 +362,7 @@
               }
             ],
             "hide": false,
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "autogen",
             "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -418,8 +418,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#37872D"
@@ -475,7 +474,7 @@
               }
             ],
             "hide": false,
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "autogen",
             "query": "SELECT mean(\"404\")  FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -531,8 +530,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#37872D"
@@ -588,7 +586,7 @@
               }
             ],
             "hide": false,
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "autogen",
             "query": "SELECT mean(\"504\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time(10s) fill(0)",
@@ -644,8 +642,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#37872D"
@@ -701,7 +698,7 @@
               }
             ],
             "hide": false,
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "autogen",
             "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -757,8 +754,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#37872D"
@@ -814,7 +810,7 @@
               }
             ],
             "hide": false,
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "autogen",
             "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -870,8 +866,7 @@
                   "value": null
                 },
                 {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": null
+                  "color": "rgba(237, 129, 40, 0.89)"
                 },
                 {
                   "color": "#37872D"
@@ -927,7 +922,7 @@
               }
             ],
             "hide": false,
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "autogen",
             "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
@@ -1038,9 +1033,11 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_quantiles",
+            "measurement": "{id}_overall_quantiles",
             "orderByTime": "ASC",
             "policy": "autogen",
+            "query": "SELECT median(\"q100\") AS \"q100\", mean(\"q99\") AS \"q99\", mean(\"q98\") AS \"q98\", mean(\"q95\") AS \"q95\", mean(\"q90\") AS \"q90\", mean(\"q85\") AS \"q85\", mean(\"q80\") AS \"q80\", mean(\"q75\") AS \"q75\", mean(\"q50\") AS \"q50\" FROM \"autogen\".\"{id}_overall_quantiles\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+            "rawQuery": true,
             "refId": "A",
             "resultFormat": "time_series",
             "select": [
@@ -1229,7 +1226,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_meta",
+            "measurement": "{id}_overall_meta",
             "orderByTime": "ASC",
             "policy": "autogen",
             "refId": "B",
@@ -1361,7 +1358,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_meta",
+            "measurement": "{id}_overall_meta",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "A",
@@ -1402,7 +1399,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_meta",
+            "measurement": "{id}_overall_meta",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "B",
@@ -1536,7 +1533,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "proto_codes",
+            "measurement": "{id}_proto_codes",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "A",
@@ -1691,7 +1688,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_meta",
+            "measurement": "{id}_overall_meta",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "B",
@@ -1822,7 +1819,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "net_codes",
+            "measurement": "{id}_net_codes",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "A",
@@ -1923,7 +1920,7 @@
                 "type": "fill"
               }
             ],
-            "measurement": "overall_meta",
+            "measurement": "{id}_overall_meta",
             "orderByTime": "ASC",
             "policy": "default",
             "refId": "B",
@@ -1976,12 +1973,32 @@
         }
       }
     ],
-    "refresh": "5s",
+    "refresh": "1s",
     "schemaVersion": 38,
     "style": "dark",
     "tags": [],
     "templating": {
-      "list": []
+      "list": [
+        {
+          "current": {
+            "selected": false,
+            "text": "",
+            "value": ""
+          },
+          "hide": 0,
+          "name": "id",
+          "options": [
+            {
+              "selected": false,
+              "text": "",
+              "value": ""
+            }
+          ],
+          "query": "",
+          "skipUrlSync": false,
+          "type": "textbox"
+        }
+      ]
     },
     "time": {
       "from": "now-5m",
@@ -1989,16 +2006,8 @@
     },
     "timepicker": {
       "refresh_intervals": [
-        "5s",
-        "10s",
-        "30s",
-        "1m",
-        "5m",
-        "15m",
-        "30m",
-        "1h",
-        "2h",
-        "1d"
+        "1s",
+        "5s"
       ],
       "time_options": [
         "5m",
@@ -2013,9 +2022,7 @@
       ]
     },
     "timezone": "",
-    "title": "Overload",
-    "uid": "metrics",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
   }
 }
