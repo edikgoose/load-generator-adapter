@@ -1,28 +1,40 @@
 package edikgoose.loadgenerator.service
 
-import edikgoose.loadgenerator.configuration.GrafanaProperties
-import edikgoose.loadgenerator.converter.YandexTankConfigConverter
+import edikgoose.loadgenerator.converter.convertToLoadTest
+import edikgoose.loadgenerator.converter.convertToYandexTankConfig
 import edikgoose.loadgenerator.dto.LoadTestParamsDto
 import edikgoose.loadgenerator.dto.LoadTestStartInformationDto
 import edikgoose.loadgenerator.dto.LoadTestStatusDto
 import edikgoose.loadgenerator.dto.LoadTestStopResponseDto
+import edikgoose.loadgenerator.enumeration.LoadGeneratorEngine
 import edikgoose.loadgenerator.feign.YandexTankApiClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.util.*
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class LoadTestService(
-    val grafanaProperties: GrafanaProperties,
-    val yandexTankConfigConverter: YandexTankConfigConverter,
-    val yandexTankApiClient: YandexTankApiClient
+    val grafanaDashboardService: GrafanaDashboardService,
+    val yandexTankApiClient: YandexTankApiClient,
+    val loadTestDbService: LoadTestDbService
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestService::class.java)
 
+    @Transactional
     fun runLoadTest(loadTestParamsDto: LoadTestParamsDto): LoadTestStartInformationDto {
-        val id: String = UUID.randomUUID().toString()
-        return startTest(loadTestParamsDto, id)
+        val loadTest = loadTestParamsDto.convertToLoadTest()
+        loadTestDbService.saveLoadTest(loadTest)
+        when (loadTestParamsDto.loadGeneratorEngine) {
+            LoadGeneratorEngine.YANDEX_TANK -> {
+                val config = loadTest.convertToYandexTankConfig()
+                logger.info("Config for Yandex tank:\n$config")
+
+                return yandexTankApiClient.runLoadTest(config).also {
+                    loadTestDbService.updateExternalId(loadTest, it.session)
+                }
+            }
+        }
     }
 
     fun getLoadTestStatus(loadTestId: String): LoadTestStatusDto {
@@ -31,11 +43,5 @@ class LoadTestService(
 
     fun stopLoadTest(loadTestId: String): LoadTestStopResponseDto {
         return yandexTankApiClient.stopLoadTest(loadTestId)
-    }
-
-    private fun startTest(loadTestParamsDto: LoadTestParamsDto, id: String): LoadTestStartInformationDto {
-        val config = yandexTankConfigConverter.convert(loadTestParamsDto, id)
-        logger.info("Config for Yandex tank:\n$config")
-        return yandexTankApiClient.runLoadTest(config)
     }
 }

@@ -1,0 +1,76 @@
+version: '3.0'
+
+networks:
+  load-generation:
+
+services:
+  tank-server:
+    image: edikgoose/yandex-tank-api:latest
+    container_name: tank
+    #    network_mode: host
+    dns: 8.8.8.8
+    depends_on:
+      - influx
+      - grafana
+    ports:
+      - "8888:8888"
+    volumes:
+      - ${PWD}/tests:/var/loadtest
+    networks:
+      - load-generation
+
+  influx:
+    image: influxdb:1.8
+    container_name: influx
+    ports:
+      - "8086:8086"
+    environment:
+      INFLUXDB_DB: metrics
+    networks:
+      - load-generation
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3001:3000"
+    volumes:
+      - ${PWD}/grafana/provisioning:/etc/grafana/provisioning/
+      - ${PWD}/grafana/data/dashboards:/var/lib/grafana/dashboards/
+      - ${PWD}/grafana/grafana.ini:/etc/grafana/grafana.ini
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_INSTALL_PLUGINS: "grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource"
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+    restart: on-failure
+    networks:
+      - load-generation
+
+  postgresql:
+    image: postgres:12
+    container_name: load-generator-postgres
+    ports:
+      - "5421:5432"
+    environment:
+      - POSTGRES_DB=load_generator_adapter
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    networks:
+      - load-generation
+
+  load-generator-adapter:
+    image: edikgoose/load-generator-adapter:latest
+    container_name: load-generator-adapter
+    ports:
+      - "8087:8087"
+    networks:
+      - load-generation
+
+  web-server:
+    image: edikgoose/hello-world-web:latest
+    container_name: web-server
+    ports:
+      - "8080:8080"
+    networks:
+      - load-generation

@@ -49,6 +49,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    implementation("com.vladmihalcea:hibernate-types-52:2.20.0")
 }
 
 tasks.withType<KotlinCompile> {

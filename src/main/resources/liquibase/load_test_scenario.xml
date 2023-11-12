@@ -27,7 +27,15 @@
             <column name="status" type="text" remarks="статус теста">
                 <constraints nullable="false"/>
             </column>
-            <column name="session_id" type="text" remarks="id сессии">
+            <column name="external_id" type="text" remarks="ID теста в сервисе генерации нагрузки"/>
+            <column name="grafana_url" type="text" remarks="URL до дашборда графаны"/>
+            <column name="address" type="TEXT" remarks="Адрес сервиса">
+                <constraints nullable="false"/>
+            </column>
+            <column name="uris" type="TEXT[]" remarks="URIs для тестирования">
+                <constraints nullable="false"/>
+            </column>
+            <column name="load_scheme" type="text" remarks="Параметры тестирования">
                 <constraints nullable="false"/>
             </column>
             <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
