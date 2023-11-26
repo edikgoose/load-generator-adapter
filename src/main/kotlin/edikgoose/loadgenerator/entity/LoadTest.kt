@@ -5,10 +5,14 @@ import edikgoose.loadgenerator.enumeration.LoadGeneratorEngine
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
 import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.Instant
 import javax.persistence.*
 
 @Entity
 @Table(name = "load_test")
+@EntityListeners(AuditingEntityListener::class)
 @TypeDef(name = "string-array", typeClass = StringArrayType::class)
 data class LoadTest(
     @Id
@@ -18,6 +22,9 @@ data class LoadTest(
     )
     @SequenceGenerator(name = "load_gen", sequenceName = "load_test_id_seq", allocationSize = 1)
     var id: Long? = null,
+
+    @Column(name = "title", nullable = true)
+    var title: String? = null,
 
     @Column(name = "load_generator_type", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -42,4 +49,8 @@ data class LoadTest(
 
     @Column(name = "load_scheme", nullable = false)
     var loadScheme: String,
+
+    @CreatedDate
+    @Column(name = "created_date", nullable = false, updatable = false)
+    var createdDate: Instant?,
 )

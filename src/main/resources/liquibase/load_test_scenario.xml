@@ -21,6 +21,7 @@
             <column name="id" type="BIGINT" defaultValueSequenceNext="load_test_id_seq" >
                 <constraints nullable="false" primaryKey="true" primaryKeyName="load_test__id_idx"/>
             </column>
+            <column name="title" type="text" remarks="заголовок теста"/>
             <column name="load_generator_type" type="TEXT" remarks="Система, которая генерирует нагрузку">
                 <constraints nullable="false"/>
             </column>

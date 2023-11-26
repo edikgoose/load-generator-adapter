@@ -27,10 +27,10 @@ spring:
 
 load-generator-engine:
   yandex-tank:
-    base-url: ${YANDEX_TANK_BASE_URL:tank-server:8888}
+    base-url: ${YANDEX_TANK_BASE_URL:http://tank-server:8888}
 
   grafana:
-    base-url: ${GRAFANA_BASE_URL:grafana:3000}
+    base-url: ${GRAFANA_BASE_URL:http://grafana:3000}
     username: ${GRAFANA_USERNAME:admin}
     password: ${GRAFANA_PASSWORD:admin}
 

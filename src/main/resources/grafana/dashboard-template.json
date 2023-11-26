@@ -6,8 +6,8 @@
     "canAdmin": true,
     "canStar": true,
     "canDelete": true,
-    "slug": "overload",
-    "url": "/d/metrics/overload",
+    "slug": "test",
+    "url": "/d/test/metrics",
     "expires": "0001-01-01T00:00:00Z",
     "created": "2023-11-12T17:15:52Z",
     "updated": "2023-11-12T17:37:07Z",
@@ -55,13 +55,13 @@
         }
       ]
     },
-    "description": "Overload dashboard for yandex tank",
+    "description": "Dashboard for results of load testing with {id}",
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
     "id": null,
-    "uid": "metrics_{id}",
-    "title": "Overload_{id}",
+    "uid": "results_{uid}",
+    "title": "Load_test_{id}",
     "links": [],
     "liveNow": false,
     "panels": [
@@ -1977,32 +1977,9 @@
     "schemaVersion": 38,
     "style": "dark",
     "tags": [],
-    "templating": {
-      "list": [
-        {
-          "current": {
-            "selected": false,
-            "text": "",
-            "value": ""
-          },
-          "hide": 0,
-          "name": "id",
-          "options": [
-            {
-              "selected": false,
-              "text": "",
-              "value": ""
-            }
-          ],
-          "query": "",
-          "skipUrlSync": false,
-          "type": "textbox"
-        }
-      ]
-    },
     "time": {
-      "from": "now-5m",
-      "to": "now"
+      "from": "{date-from}",
+      "to": "{date-to}"
     },
     "timepicker": {
       "refresh_intervals": [

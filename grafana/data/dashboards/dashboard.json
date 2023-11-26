@@ -1943,8 +1943,8 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
-    "to": "now"
+    "from": "2023-11-26 14:45:41",
+    "to": "2023-11-26 14:46:42"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1964,7 +1964,7 @@
     ]
   },
   "timezone": "",
-  "title": "Overload",
+  "title": "Test",
   "uid": "metrics",
   "version": 1,
   "weekStart": ""

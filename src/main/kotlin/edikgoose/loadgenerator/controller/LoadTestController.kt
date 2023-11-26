@@ -1,11 +1,10 @@
 package edikgoose.loadgenerator.controller
 
-import edikgoose.loadgenerator.dto.LoadTestParamsDto
-import edikgoose.loadgenerator.dto.LoadTestStartInformationDto
-import edikgoose.loadgenerator.dto.LoadTestStatusDto
-import edikgoose.loadgenerator.dto.LoadTestStopResponseDto
+import edikgoose.loadgenerator.dto.*
 import edikgoose.loadgenerator.service.LoadTestService
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -16,30 +15,46 @@ import javax.validation.constraints.NotBlank
 @RestController
 @Tag(name = "API для управления нагрузочными тестами", description = "API для управления нагрузочными тестами")
 class LoadTestController(val loadTestService: LoadTestService) {
-    @PostMapping("run-linear-load")
-    fun runLoadTest(loadTestParamsDto: LoadTestParamsDto): ResponseEntity<LoadTestStartInformationDto> {
+    @PostMapping("run")
+    @Operation(summary = "Метод для запуска нагрузочного тестирования")
+    fun runLoadTest(loadTestParamsDto: LoadTestParamsDto): ResponseEntity<LoadTestStatusOutputDto> {
         return ResponseEntity(loadTestService.runLoadTest(loadTestParamsDto), HttpStatus.OK)
     }
 
-    @GetMapping("status")
+    @GetMapping("status/{testId}")
+    @Operation(summary = "Метод для получение статуса теста")
     @Parameter(
         name = "testId",
-        schema = Schema(type = "string"),
+        `in` = ParameterIn.PATH,
+        schema = Schema(type = "integer", format = "int64"),
         description = "ID нагрузочного тестирования",
         required = true
     )
-    fun getLoadTestStatus(@NotBlank @RequestParam("testId") session: String): ResponseEntity<LoadTestStatusDto> {
-        return ResponseEntity(loadTestService.getLoadTestStatus(session), HttpStatus.OK)
+    fun getLoadTestStatus(@PathVariable @NotBlank testId: Long): ResponseEntity<LoadTestStatusOutputDto> {
+        return ResponseEntity(loadTestService.getLoadTestStatus(testId), HttpStatus.OK)
+    }
+
+    @GetMapping("/status")
+    @Operation(summary = "Метод для получение статуса всех доступных тестов")
+    fun getAllLoadTests(): ResponseEntity<List<LoadTestStatusOutputDto>> {
+        return ResponseEntity(loadTestService.getAllLoadTests(), HttpStatus.OK)
+    }
+
+    @GetMapping("/status-running")
+    @Operation(summary = "Метод для получение статуса теста, которые исполняется в данный момент", description = "Для яндекс танка недоступен параллельный запуск тестов")
+    fun getAllRunningLoadTests(): ResponseEntity<List<LoadTestStatusOutputDto>> {
+        return ResponseEntity(loadTestService.getAllRunningLoadTests(), HttpStatus.OK)
     }
 
     @PutMapping("stop")
     @Parameter(
         name = "testId",
-        schema = Schema(type = "string"),
+        schema = Schema(type = "integer", format = "int64"),
         description = "ID нагрузочного тестирования",
         required = true
     )
-    fun stopLoadTestStatus(@NotBlank @RequestParam("testId") session: String): ResponseEntity<LoadTestStopResponseDto> {
-        return ResponseEntity(loadTestService.stopLoadTest(session), HttpStatus.OK)
+    @Operation(summary = "Метод для остановки теста")
+    fun stopLoadTestStatus(@NotBlank @RequestParam("testId") testId: Long): ResponseEntity<LoadTestStopResponseDto> {
+        return ResponseEntity(loadTestService.stopLoadTest(testId), HttpStatus.OK)
     }
 }
