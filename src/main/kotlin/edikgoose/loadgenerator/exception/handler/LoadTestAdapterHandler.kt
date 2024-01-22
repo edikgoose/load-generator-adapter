@@ -1,13 +1,14 @@
 package edikgoose.loadgenerator.exception.handler
 
 import edikgoose.loadgenerator.controller.LoadTestController
+import edikgoose.loadgenerator.controller.ScenarioController
 import edikgoose.loadgenerator.exception.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
-@ControllerAdvice(assignableTypes = [LoadTestController::class])
+@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class])
 class LoadTestAdapterHandler {
     @ExceptionHandler(value = [YandexTankException::class])
     protected fun handleYandexTankException(ex: YandexTankException): ResponseEntity<Any> {
@@ -39,4 +40,10 @@ class LoadTestAdapterHandler {
             .body(ResponseEntity<String>(ex.message, HttpStatus.SERVICE_UNAVAILABLE))
     }
 
+
+    @ExceptionHandler(value = [NotFoundException::class])
+    protected fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ResponseEntity<String>(ex.message, HttpStatus.NOT_FOUND))
+    }
 }

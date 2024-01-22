@@ -62,6 +62,8 @@ services:
   load-generator-adapter:
     image: edikgoose/load-generator-adapter:latest
     container_name: load-generator-adapter
+    environment:
+      TZ: "Europe/Moscow"
     ports:
       - "8087:8087"
     networks:

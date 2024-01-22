@@ -8,6 +8,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import kotlin.time.Duration
 import kotlin.time.toJavaDuration
@@ -51,12 +52,13 @@ class GrafanaDashboardService(
 
         val text = inputStream?.bufferedReader().use { it?.readText() ?: "" }
 
+        val dateNow = LocalDateTime.now(ZoneId.of("Europe/Moscow"))
 
         return text
             .replace("{id}", id.toString())
             .replace("{uid}", uid.take(30))
-            .replace("{date-from}", dateFormatter.format(LocalDateTime.now()))
-            .replace("{date-to}", dateFormatter.format(LocalDateTime.now().plus(duration.toJavaDuration()).plusMinutes(1)))
+            .replace("{date-from}", dateFormatter.format(dateNow))
+            .replace("{date-to}", dateFormatter.format(dateNow.plus(duration.toJavaDuration()).plusMinutes(1)))
     }
 
     companion object {
