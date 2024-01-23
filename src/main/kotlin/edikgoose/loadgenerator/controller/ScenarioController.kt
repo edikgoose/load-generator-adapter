@@ -1,6 +1,5 @@
 package edikgoose.loadgenerator.controller
 
-import edikgoose.loadgenerator.dto.ScenarioInputDto
 import edikgoose.loadgenerator.dto.ScenarioOutputDto
 import edikgoose.loadgenerator.service.ScenarioService
 import io.swagger.v3.oas.annotations.Operation
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import javax.validation.constraints.NotBlank
 
@@ -24,9 +25,20 @@ class ScenarioController(
     @Autowired val scenarioService: ScenarioService
 ) {
     @PostMapping(BASE_URL)
+    @Parameter(
+        name = "name",
+        `in` = ParameterIn.QUERY,
+        schema = Schema(type = "string"),
+        required = true,
+        description = "Название сценария",
+        example = "Сценарий до 500 рпс"
+    )
     @Operation(summary = "Метод для создания сценария нагрузки")
-    fun createScenario(scenarioInputDto: ScenarioInputDto): ResponseEntity<ScenarioOutputDto> =
-        ResponseEntity(scenarioService.createScenario(scenarioInputDto), HttpStatus.OK)
+    fun createScenario(
+        @RequestParam(value = "name", required = true) name: String,
+        @RequestBody config: String
+    ): ResponseEntity<ScenarioOutputDto> =
+        ResponseEntity(scenarioService.createScenario(name, config), HttpStatus.OK)
 
     @DeleteMapping("$BASE_URL/{id}")
     @Operation(summary = "Метод для удаления сценария нагрузки")

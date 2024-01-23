@@ -1,9 +1,7 @@
 package edikgoose.loadgenerator.entity
 
 import com.vladmihalcea.hibernate.type.array.StringArrayType
-import edikgoose.loadgenerator.enumeration.LoadGeneratorEngine
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
-import org.hibernate.annotations.Type
 import org.hibernate.annotations.TypeDef
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -23,12 +21,12 @@ data class LoadTest(
     @SequenceGenerator(name = "load_gen", sequenceName = "load_test_id_seq", allocationSize = 1)
     var id: Long? = null,
 
-    @Column(name = "title", nullable = true)
-    var title: String? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "id", nullable = false)
+    var scenario: Scenario,
 
-    @Column(name = "load_generator_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    var loadGeneratorEngine: LoadGeneratorEngine,
+    @Column(name = "name", nullable = true)
+    var name: String? = null,
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -37,18 +35,8 @@ data class LoadTest(
     @Column(name = "external_id")
     var externalId: String?,
 
-    @Column(name = "grafana_url")
-    var grafanaUrl: String?,
-
-    @Column(name = "address", nullable = false)
-    var address: String?,
-
-    @Type(type = "string-array")
-    @Column(name = "uris", nullable = false)
-    var uris: Array<String>,
-
-    @Column(name = "load_scheme", nullable = false)
-    var loadScheme: String,
+    @Column(name = "dashboard_url")
+    var dashboardUrl: String?,
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)

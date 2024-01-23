@@ -14,8 +14,8 @@ class LoadTestDbService(
     val loadTestRepository: LoadTestRepository
 ) {
     @Transactional
-    fun saveLoadTest(loadTest: LoadTest) {
-        loadTestRepository.save(loadTest)
+    fun saveLoadTest(loadTest: LoadTest): LoadTest {
+        return loadTestRepository.save(loadTest)
     }
 
     @Transactional

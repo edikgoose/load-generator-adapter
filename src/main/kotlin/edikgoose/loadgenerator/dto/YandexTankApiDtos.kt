@@ -1,7 +1,5 @@
 package edikgoose.loadgenerator.dto
 
-import edikgoose.loadgenerator.enumeration.LoadTestStatus
-import java.time.Instant
 
 data class LoadTestStatusDto(
     val status: String,
@@ -11,19 +9,16 @@ data class LoadTestStatusDto(
     val failures: Array<LoadTestStatusFailures>
 )
 
-data class LoadTestStatusOutputDto(
-    val id: Long,
-    val title: String?,
-    val session: String,
-    val status: LoadTestStatus,
-    val grafanaUrl: String,
-    val createdDate: Instant
-)
-
-
-
 
 data class LoadTestStatusFailures(
     val reason: String,
     val stage: String
+)
+
+data class LoadTestStopResponseDto (
+    val reason: String
+)
+
+data class YandexTankTestRunOutputDto(
+    val session: String,
 )

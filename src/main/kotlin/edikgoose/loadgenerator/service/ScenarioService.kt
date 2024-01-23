@@ -1,6 +1,6 @@
 package edikgoose.loadgenerator.service
 
-import edikgoose.loadgenerator.dto.ScenarioInputDto
+import edikgoose.loadgenerator.converter.toScenarioOutputDto
 import edikgoose.loadgenerator.dto.ScenarioOutputDto
 import edikgoose.loadgenerator.entity.Scenario
 import edikgoose.loadgenerator.exception.NotFoundException
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service
 class ScenarioService(
     @Autowired val scenarioRepository: ScenarioRepository
 ) {
-    fun createScenario(scenarioDto: ScenarioInputDto): ScenarioOutputDto =
-        scenarioRepository.save(scenarioDto.toScenario()).toScenarioOutputDto()
-
+    fun createScenario(name: String, config: String): ScenarioOutputDto = scenarioRepository.save(
+        Scenario(id = null, name = name, config = config, createdDate = null)
+    ).toScenarioOutputDto()
 
     fun deleteScenario(id: Long): ScenarioOutputDto {
         val scenario: Scenario? = scenarioRepository.findById(id).orElse(null)
@@ -31,17 +31,5 @@ class ScenarioService(
 
     fun getAllScenarios(): List<ScenarioOutputDto> = scenarioRepository.findAll().map { it.toScenarioOutputDto() }
 
-    fun ScenarioInputDto.toScenario() = Scenario(
-        id = null,
-        name = this.name,
-        config = this.scenarioConfig,
-        createdDate = null,
-    )
 
-    fun Scenario.toScenarioOutputDto() = ScenarioOutputDto(
-        id = this.id!!,
-        name = this.name!!,
-        scenarioConfig = this.config!!,
-        createdDate = this.createdDate!!,
-    )
 }

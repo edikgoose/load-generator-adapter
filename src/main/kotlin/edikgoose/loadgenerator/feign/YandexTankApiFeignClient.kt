@@ -1,6 +1,6 @@
 package edikgoose.loadgenerator.feign
 
-import edikgoose.loadgenerator.dto.LoadTestStartInformationDto
+import edikgoose.loadgenerator.dto.YandexTankTestRunOutputDto
 import edikgoose.loadgenerator.dto.LoadTestStatusDto
 import edikgoose.loadgenerator.dto.LoadTestStopResponseDto
 import org.springframework.http.MediaType
@@ -14,7 +14,7 @@ interface YandexTankApiFeignClient {
         consumes = [MediaType.TEXT_PLAIN_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun runLoadTest(config: String): LoadTestStartInformationDto
+    fun runLoadTest(config: String): YandexTankTestRunOutputDto
 
     @GetMapping(path = ["/status"], produces = [MediaType.APPLICATION_JSON_VALUE])
     fun getLoadTestStatus(@RequestParam(name = "session") loadTestId: String): LoadTestStatusDto

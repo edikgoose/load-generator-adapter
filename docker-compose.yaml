@@ -32,6 +32,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
+    dns: 8.8.8.8
     ports:
       - "3001:3000"
     volumes:
@@ -41,7 +42,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-      GF_INSTALL_PLUGINS: "grafana-clock-panel,briangann-gauge-panel,natel-plotly-panel,grafana-simple-json-datasource"
+#      GF_INSTALL_PLUGINS: grafana-clock-panel, briangann-gauge-panel, natel-plotly-panel, grafana-simple-json-datasource
       GF_AUTH_ANONYMOUS_ENABLED: "true"
     restart: on-failure
     networks:

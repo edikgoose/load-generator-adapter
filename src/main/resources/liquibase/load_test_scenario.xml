@@ -21,23 +21,15 @@
             <column name="id" type="BIGINT" defaultValueSequenceNext="load_test_id_seq" >
                 <constraints nullable="false" primaryKey="true" primaryKeyName="load_test__id_idx"/>
             </column>
-            <column name="title" type="text" remarks="заголовок теста"/>
-            <column name="load_generator_type" type="TEXT" remarks="Система, которая генерирует нагрузку">
-                <constraints nullable="false"/>
-            </column>
+            <column name="name" type="text" remarks="название теста"/>
             <column name="status" type="text" remarks="статус теста">
                 <constraints nullable="false"/>
             </column>
             <column name="external_id" type="text" remarks="ID теста в сервисе генерации нагрузки"/>
-            <column name="grafana_url" type="text" remarks="URL до дашборда графаны"/>
-            <column name="address" type="TEXT" remarks="Адрес сервиса">
-                <constraints nullable="false"/>
-            </column>
-            <column name="uris" type="TEXT[]" remarks="URIs для тестирования">
-                <constraints nullable="false"/>
-            </column>
-            <column name="load_scheme" type="text" remarks="Параметры тестирования">
-                <constraints nullable="false"/>
+            <column name="dashboard_url" type="text" remarks="URL до дашборда графаны"/>
+            <column name="scenario_id" type="BIGINT" remarks="ID сценария">
+                <constraints nullable="false" referencedTableName="scenario" referencedColumnNames="id"
+                             foreignKeyName="load_test__scenario_id_idx"/>
             </column>
             <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
                     remarks="Дата создания записи">
