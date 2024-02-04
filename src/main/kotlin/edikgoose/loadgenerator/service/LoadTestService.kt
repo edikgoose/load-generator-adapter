@@ -6,6 +6,7 @@ import edikgoose.loadgenerator.entity.LoadTest
 import edikgoose.loadgenerator.entity.Scenario
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
 import edikgoose.loadgenerator.exception.NotFoundException
+import edikgoose.loadgenerator.exception.SessionAlreadyStoppedException
 import edikgoose.loadgenerator.exception.YandexTankException
 import edikgoose.loadgenerator.feign.YandexTankApiFeignClient
 import edikgoose.loadgenerator.repository.ScenarioRepository
@@ -55,7 +56,7 @@ class LoadTestService(
         logger.info("Config for Yandex tank:\n${scenario.config}")
 
         val yandexTankTestRunOutputDto =
-            if (scenario.ammo == null) { // если указан файл для патрон, значит запустить тест мы должны через break stage
+            if (scenario.ammo != null) { // если указан файл для патрон, значит запустить тест мы должны через break stage
                 loadTest.status = LoadTestStatus.LOCKED
                 yandexTankApiFeignClient.runLoadTest(
                     yandexTankTestConfigService.substitutePrefixMeasurement(
@@ -139,7 +140,11 @@ class LoadTestService(
         val statusDto = yandexTankApiFeignClient.getLoadTestStatus(loadTestId = loadTest.externalId!!)
         if (statusDto.status == "failed") { // тест почему-то зафэйлился
             logger.warn("Test ${loadTest.id} is failed")
+            try {
             yandexTankApiFeignClient.stopLoadTest(loadTestId = loadTest.externalId!!)
+            } catch (e: SessionAlreadyStoppedException) {
+                logger.info("Load test with id ${loadTest.id} is already stopped")
+            }
             loadTest.status = LoadTestStatus.FAILED
             loadTestDbService.saveLoadTest(loadTest)
         }

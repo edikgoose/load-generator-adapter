@@ -30,6 +30,7 @@ interface YandexTankApiFeignClient {
     fun stopLoadTest(@RequestParam(name = "session") loadTestId: String): LoadTestResponseDto
 
     @PostMapping(
+        path = ["upload"],
         consumes = [MediaType.TEXT_PLAIN_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )

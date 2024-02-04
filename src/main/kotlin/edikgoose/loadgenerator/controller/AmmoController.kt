@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,20 +38,6 @@ class AmmoController(
         @RequestBody ammo: String
     ): ResponseEntity<AmmoOutputDto> =
         ResponseEntity(ammoService.createAmmo(name, ammo), HttpStatus.OK)
-
-    @DeleteMapping("$BASE_URL/{id}")
-    @Operation(summary = "Метод для удаления патронов")
-    @Parameter(
-        name = "id",
-        `in` = ParameterIn.PATH,
-        schema = Schema(type = "integer", format = "int64"),
-        description = "ID патрона",
-        required = true
-    )
-    fun deleteAmmo(
-        @PathVariable @NotBlank id: Long,
-    ): ResponseEntity<AmmoOutputDto> =
-        ResponseEntity(ammoService.deleteAmmo(id), HttpStatus.OK)
 
     @GetMapping("$BASE_URL/{id}")
     @Operation(summary = "Метод для получения патронов")
