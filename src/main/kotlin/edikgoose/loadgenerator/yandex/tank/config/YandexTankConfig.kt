@@ -19,6 +19,6 @@ data class InfluxConfig(
     var enabled: Boolean? = null,
     var address: String? = null,
     var database: String? = null,
-    var tank_tag: String? = null,
-    var prefix_measurement: String? = null
+    var tankTag: String? = null,
+    var prefixMeasurement: String? = null
 )

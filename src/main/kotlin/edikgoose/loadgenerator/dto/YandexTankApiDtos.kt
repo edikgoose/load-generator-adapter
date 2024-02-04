@@ -6,6 +6,7 @@ data class LoadTestStatusDto(
     val stageCompleted: Boolean,
     val currentStage: String?,
     val test: String?,
+    val `break`: String?,
     val failures: Array<LoadTestStatusFailures>
 )
 
@@ -15,7 +16,7 @@ data class LoadTestStatusFailures(
     val stage: String
 )
 
-data class LoadTestStopResponseDto (
+data class LoadTestResponseDto (
     val reason: String
 )
 

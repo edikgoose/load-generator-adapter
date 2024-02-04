@@ -1,0 +1,48 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="ammo_id_seq" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="ammo_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="ammo_id_seq" incrementBy="1" cacheSize="50" startValue="1"/>
+    </changeSet>
+    <changeSet id="ammo" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="ammo"/>
+            </not>
+        </preConditions>
+        <createTable tableName="ammo" remarks="Боеприпас">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="ammo_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="ammo__id_idx"/>
+            </column>
+            <column name="name" type="text" remarks="Название боеприпаса">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ammo" type="TEXT" remarks="Конфиг боеприпаса">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
+                    remarks="Дата создания боеприпаса">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create_unique_constraint_ammo_name_idx" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists constraintName="ammo_name_idx" tableName="ammo"/>
+            </not>
+        </preConditions>
+
+        <addUniqueConstraint tableName="ammo" columnNames="name"
+                             constraintName="ammo_name_idx"/>
+    </changeSet>
+
+</databaseChangeLog>

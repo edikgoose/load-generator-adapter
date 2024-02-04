@@ -6,39 +6,31 @@ import java.time.Instant
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EntityListeners
-import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 import javax.persistence.SequenceGenerator
 import javax.persistence.Table
 
 @Entity
-@Table(name = "scenario")
+@Table(name = "ammo")
 @EntityListeners(AuditingEntityListener::class)
-data class Scenario (
+data class Ammo (
     @Id
     @GeneratedValue(
         strategy = GenerationType.SEQUENCE,
-        generator = "scenario_generator"
+        generator = "ammo_generator"
     )
-    @SequenceGenerator(name = "scenario_generator", sequenceName = "scenario_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "ammo_generator", sequenceName = "ammo_id_seq", allocationSize = 1)
     var id: Long? = null,
 
     @Column(name = "name", nullable = false)
     var name: String?,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "id", nullable = true)
-    var ammo: Ammo?,
-
-    @Column(name = "config", nullable = false)
-    var config: String?,
+    @Column(name = "ammo", nullable = false)
+    var ammo: String?,
 
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
     var createdDate: Instant?
 )
-

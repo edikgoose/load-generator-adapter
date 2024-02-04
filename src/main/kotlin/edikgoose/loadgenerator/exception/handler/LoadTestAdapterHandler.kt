@@ -1,14 +1,25 @@
 package edikgoose.loadgenerator.exception.handler
 
+import edikgoose.loadgenerator.controller.AmmoController
+import edikgoose.loadgenerator.controller.FileController
 import edikgoose.loadgenerator.controller.LoadTestController
 import edikgoose.loadgenerator.controller.ScenarioController
-import edikgoose.loadgenerator.exception.*
+import edikgoose.loadgenerator.exception.AmmoNameAlreadyExistsException
+import edikgoose.loadgenerator.exception.AnotherSessionIsRunningException
+import edikgoose.loadgenerator.exception.FileStorageException
+import edikgoose.loadgenerator.exception.GrafanaDashboardPushException
+import edikgoose.loadgenerator.exception.IllegalConfigException
+import edikgoose.loadgenerator.exception.NotFoundException
+import edikgoose.loadgenerator.exception.SessionAlreadyStoppedException
+import edikgoose.loadgenerator.exception.SessionNotFoundException
+import edikgoose.loadgenerator.exception.YandexTankException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import java.io.FileNotFoundException
 
-@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class])
+@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class, AmmoController::class, FileController::class])
 class LoadTestAdapterHandler {
     @ExceptionHandler(value = [YandexTankException::class])
     protected fun handleYandexTankException(ex: YandexTankException): ResponseEntity<Any> {
@@ -45,5 +56,23 @@ class LoadTestAdapterHandler {
     protected fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ResponseEntity<String>(ex.message, HttpStatus.NOT_FOUND))
+    }
+
+    @ExceptionHandler(value = [FileNotFoundException::class])
+    protected fun handleFileNotFoundException(ex: FileNotFoundException): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ResponseEntity<String>(ex.message, HttpStatus.NOT_FOUND))
+    }
+
+    @ExceptionHandler(value = [FileStorageException::class])
+    protected fun handleFileStorageException(ex: FileStorageException): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ResponseEntity<String>(ex.message, HttpStatus.INTERNAL_SERVER_ERROR))
+    }
+
+    @ExceptionHandler(value = [AmmoNameAlreadyExistsException::class, IllegalConfigException::class])
+    protected fun handleBadRequestExceptions(ex: RuntimeException): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ResponseEntity<String>(ex.message, HttpStatus.BAD_REQUEST))
     }
 }

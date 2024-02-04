@@ -6,5 +6,6 @@ data class ScenarioOutputDto (
     val id: Long,
     val name: String,
     val scenarioConfig: String,
-    val createdDate: Instant
+    val createdDate: Instant,
+    val ammoId: Long?,
 )

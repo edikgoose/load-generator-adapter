@@ -27,6 +27,10 @@
             <column name="config" type="TEXT" remarks="Конфиг сценария">
                 <constraints nullable="false"/>
             </column>
+            <column name="ammo_id" type="BIGINT" remarks="ID боеприпасов">
+                <constraints nullable="true" referencedTableName="ammo" referencedColumnNames="id"
+                             foreignKeyName="scenario__ammo_id_idx"/>
+            </column>
             <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
                     remarks="Дата создания записи">
                 <constraints nullable="false"/>

@@ -13,7 +13,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration
 
 /**
  * Сервис для управления нагрузочными тестами
@@ -23,6 +23,7 @@ class LoadTestService(
     val grafanaDashboardService: GrafanaDashboardService,
     val yandexTankApiFeignClient: YandexTankApiFeignClient,
     val loadTestDbService: LoadTestDbService,
+    val yandexTankTestConfigService: YandexTankTestConfigService,
     val scenarioRepository: ScenarioRepository
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestService::class.java)
@@ -52,16 +53,34 @@ class LoadTestService(
         )
 
         logger.info("Config for Yandex tank:\n${scenario.config}")
-        val yandexTankTestRunOutputDto = yandexTankApiFeignClient.runLoadTest(scenario.config!!)
+
+        val yandexTankTestRunOutputDto =
+            if (scenario.ammo == null) { // если указан файл для патрон, значит запустить тест мы должны через break stage
+                loadTest.status = LoadTestStatus.LOCKED
+                yandexTankApiFeignClient.runLoadTest(
+                    yandexTankTestConfigService.substitutePrefixMeasurement(
+                        scenario.config!!,
+                        loadTest.id!!.toString()
+                    ),
+                    breakStage = "init"
+                )
+            } else {
+                loadTest.status = LoadTestStatus.CREATED
+                yandexTankApiFeignClient.runLoadTest(
+                    yandexTankTestConfigService.substitutePrefixMeasurement(
+                        scenario.config!!,
+                        loadTest.id!!.toString()
+                    )
+                )
+            }
 
         loadTest.externalId = yandexTankTestRunOutputDto.session
 
-        val duration: Long = extractDuration(config = scenario.config!!)
+        val duration: Duration = yandexTankTestConfigService.getDuration(configAsString = scenario.config!!)
         // Создаем дашборд для теста
-        val grafanaDashboardUrl = grafanaDashboardService.createDashboard(loadTest, duration.seconds)
+        val grafanaDashboardUrl = grafanaDashboardService.createDashboard(loadTest, duration)
 
         loadTest.dashboardUrl = grafanaDashboardUrl
-        loadTest.status = LoadTestStatus.CREATED
 
         loadTestDbService.saveLoadTest(loadTest)
         logger.info("Load test has successfully started. External id: ${loadTest.externalId}")
@@ -111,6 +130,42 @@ class LoadTestService(
         return loadTest.toLoadTestOutputDto()
     }
 
+    /**
+     * @return true, если нужно проверить статус еще раз, иначе false
+     */
+    fun uploadFileAndStartLoadTest(loadTest: LoadTest) {
+        logger.info("Start uploading ammo file and restart test ${loadTest.id}")
+        // Проверяем, что статус у теста корректный
+        val statusDto = yandexTankApiFeignClient.getLoadTestStatus(loadTestId = loadTest.externalId!!)
+        if (statusDto.status == "failed") { // тест почему-то зафэйлился
+            logger.warn("Test ${loadTest.id} is failed")
+            yandexTankApiFeignClient.stopLoadTest(loadTestId = loadTest.externalId!!)
+            loadTest.status = LoadTestStatus.FAILED
+            loadTestDbService.saveLoadTest(loadTest)
+        }
+
+        if (statusDto.status == "running" && statusDto.`break` == "finished") { // тест уже запущен
+            logger.warn("Test ${loadTest.id} is running")
+            loadTest.status = LoadTestStatus.RUNNING
+            loadTestDbService.saveLoadTest(loadTest)
+        }
+
+
+        // Загружаем файл в текущую сессию
+        val uploadFileResponseDto = yandexTankApiFeignClient.uploadFile(
+            sessionId = loadTest.externalId!!,
+            filename = loadTest.scenario.ammo?.name ?: throw YandexTankException("Ammo ${loadTest.scenario.ammo!!.id} does not have ammo file name"),
+            fileContent = loadTest.scenario.ammo?.ammo ?: throw YandexTankException("Ammo ${loadTest.scenario.ammo!!.id} does not have ammo file content"),
+        )
+        logger.info("File is loaded: $uploadFileResponseDto")
+
+        // Снова запускаем тест
+        val startTestResponseDto = yandexTankApiFeignClient.startLockedLoadTest(
+            sessionId = loadTest.externalId!!
+        )
+        logger.info("Test is started: $startTestResponseDto")
+    }
+
     private fun String.toLoadTestStatus(): LoadTestStatus = when (this) {
         "running" -> LoadTestStatus.RUNNING
         "failed" -> LoadTestStatus.FAILED
@@ -119,40 +174,5 @@ class LoadTestService(
             logger.error("Unexpected test status: $this")
             LoadTestStatus.FAILED
         }
-    }
-
-    /**
-     * Parse yandex tank config and takes duration of the test in seconds
-     * @return duration of test in seconds
-     */
-    private fun extractDuration(config: String): Long {
-        for (line in config.lines()) {
-            if (line.contains("schedule", ignoreCase = true)) {
-                val numbers = line
-                    .replace("schedule:", "")
-                    .replace(")", "")
-                    .replace("(", "")
-                    .split(",")
-                    .map { it.trim() }
-
-                return parseDurationFromScheduleParam(numbers.last())
-            }
-        }
-        throw YandexTankException("Config does not contains 'schedule' param")
-    }
-
-    /**
-     * Parse from format 1m, 5s, 150ms
-     */
-    private fun parseDurationFromScheduleParam(durationStr: String): Long {
-        if (durationStr.contains("m")) {
-            return durationStr.replace("m", "").toLong() * 60
-        } else if (durationStr.contains("s")) {
-            return durationStr.replace("s", "").toLong()
-        } else if (durationStr.contains("ms") || durationStr.toLongOrNull() == null) { // by default yandex tank use ms
-            return durationStr.replace("ms", "").toLong() / 60
-        }
-
-        throw YandexTankException("Illegal unit of time: $durationStr")
     }
 }

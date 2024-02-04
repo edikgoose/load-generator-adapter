@@ -24,6 +24,17 @@ spring:
     password: ${DB_PASSWORD:password}
     hikari:
       maximum-pool-size: 10
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 200MB
+      max-request_size: 215MB
+      file-size-threshold: 2KB
+
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:files}
+
 
 load-generator-engine:
   yandex-tank:

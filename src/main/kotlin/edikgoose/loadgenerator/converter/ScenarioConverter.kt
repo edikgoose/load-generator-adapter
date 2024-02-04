@@ -8,4 +8,5 @@ fun Scenario.toScenarioOutputDto() = ScenarioOutputDto(
     name = this.name!!,
     scenarioConfig = this.config!!,
     createdDate = this.createdDate!!,
+    ammoId = this.ammo?.id
 )
