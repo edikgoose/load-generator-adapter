@@ -30,11 +30,13 @@ class LoadTestController(val loadTestService: LoadTestService) {
         schema = Schema(type = "string"),
         required = true,
         description = "Название теста",
-        example = "Проверка после включения тогла"
+        example = "Провер \n" +
+                "KafkaKaasC\n" +
+                "\u200Eonfig.java\u200Eка после включения тогла"
     )
     @Operation(summary = "Метод для запуска нагрузочного тестирования")
     fun runLoadTest(
-        @RequestParam(value = "sсenarioId", required = true) scenarioId: Long,
+        @RequestParam(value = "scenarioId", required = true) scenarioId: Long,
         @RequestParam(value = "name", required = true) name: String,
     ): ResponseEntity<LoadTestOutputDto> {
         return ResponseEntity(loadTestService.runLoadTest(scenarioId, name), HttpStatus.OK)

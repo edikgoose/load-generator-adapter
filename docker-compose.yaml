@@ -1,13 +1,14 @@
 version: '3.0'
 
 networks:
-  load-generation:
+  foodapi_network:
+    external: true
 
 services:
   tank-server:
     image: edikgoose/yandex-tank-api:latest
     container_name: tank
-    #    network_mode: host
+#    network_mode: host
     dns: 8.8.8.8
     depends_on:
       - influx
@@ -17,7 +18,7 @@ services:
     volumes:
       - ${PWD}/tests:/var/loadtest
     networks:
-      - load-generation
+      - foodapi_network
 
   influx:
     image: influxdb:1.8
@@ -27,7 +28,7 @@ services:
     environment:
       INFLUXDB_DB: metrics
     networks:
-      - load-generation
+      - foodapi_network
 
   grafana:
     image: grafana/grafana:latest
@@ -46,7 +47,7 @@ services:
       GF_AUTH_ANONYMOUS_ENABLED: "true"
     restart: on-failure
     networks:
-      - load-generation
+      - foodapi_network
 
   postgresql:
     image: postgres:12
@@ -58,7 +59,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     networks:
-      - load-generation
+      - foodapi_network
 
   load-generator-adapter:
     image: edikgoose/load-generator-adapter:latest
@@ -68,7 +69,7 @@ services:
     ports:
       - "8087:8087"
     networks:
-      - load-generation
+      - foodapi_network
 
   web-server:
     image: edikgoose/hello-world-web:latest
@@ -76,4 +77,4 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - load-generation
+      - foodapi_network

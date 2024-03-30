@@ -15,10 +15,11 @@
       }
     ]
   },
-  "description": "Overload dashboard for yandex tank",
+  "description": "Dashboard for results of load testing",
   "editable": true,
   "fiscalYearStartMonth": 0,
-  "graphTooltip": 0,
+  "graphTooltip": 2,
+  "id": 15,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -57,12 +58,147 @@
           },
           "unit": "short"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-YlRd"
+                }
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 3,
+        "h": 6,
+        "w": 4,
         "x": 0,
+        "y": 0
+      },
+      "id": 25,
+      "links": [],
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showThresholdLabels": false,
+        "showThresholdMarkers": false
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "10s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "${test_id}_overall_meta",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"planned_requests\") FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time(1s) fill(null)",
+          "rawQuery": false,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "planned_requests"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Requests per second",
+      "type": "gauge"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PC4B52EEB0AADD047"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [
+            {
+              "from": "",
+              "id": 1,
+              "operator": "",
+              "text": "123123",
+              "to": "",
+              "type": 1,
+              "value": "50"
+            }
+          ],
+          "max": 1000,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "#7EB26D",
+                "index": 0,
+                "value": null
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Value"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 4,
         "y": 0
       },
       "id": 10,
@@ -103,6 +239,8 @@
           "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"RPS\") FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time(1s) fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -122,7 +260,7 @@
           "tags": []
         }
       ],
-      "title": "RPS",
+      "title": "Responces per second",
       "type": "gauge"
     },
     {
@@ -132,62 +270,203 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "#37872D",
+                "color": "green",
                 "value": null
               },
               {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#d44a3a"
+                "color": "red",
+                "value": 80
               }
             ]
           },
-          "unit": "none"
+          "unit": "short"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 3,
-        "x": 3,
+        "x": 8,
         "y": 0
       },
-      "id": 12,
+      "id": 21,
       "links": [],
-      "maxDataPoints": 100,
       "options": {
-        "colorMode": "value",
+        "colorMode": "background",
         "graphMode": "area",
         "justifyMode": "auto",
-        "orientation": "horizontal",
+        "orientation": "auto",
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
+          "calcs": [],
+          "fields": "/.*/",
+          "values": true
         },
         "textMode": "auto"
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "1_net_codes",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(*) as \"CODE\" FROM \"${test_id}_status\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              },
+              {
+                "params": [
+                  "net_code"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Test status",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "labelsToFields": false,
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 24,
+      "panels": [],
+      "title": "Tables",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PC4B52EEB0AADD047"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "custom.hidden",
+                "value": true
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Field"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Code"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 12,
+        "x": 0,
+        "y": 7
+      },
+      "id": 20,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": []
       },
       "pluginVersion": "10.1.1",
       "targets": [
@@ -210,30 +489,50 @@
               "type": "fill"
             }
           ],
+          "hide": false,
           "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
+          "query": "SELECT sum(*) AS \"HTTP\" FROM \"${test_id}_proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table",
           "select": [
             [
               {
                 "params": [
-                  "200"
+                  "*"
                 ],
                 "type": "field"
               },
               {
                 "params": [],
-                "type": "mean"
+                "type": "sum"
+              },
+              {
+                "params": [
+                  "HTTP"
+                ],
+                "type": "alias"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "title": "Success responses",
-      "type": "stat"
+      "title": "HTTP Status Codes",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "labelsToFields": false,
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -245,737 +544,348 @@
           "color": {
             "mode": "thresholds"
           },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
+          "custom": {
+            "align": "center",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "inspect": false
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "#C4162A",
+                "color": "green",
                 "value": null
               },
               {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#37872D"
+                "color": "red",
+                "value": 80
               }
             ]
-          },
-          "unit": "none"
+          }
         },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 6,
-        "y": 0
-      },
-      "id": 13,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
             },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "1_proto_codes",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
+            "properties": [
               {
-                "params": [
-                  "0"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Fail responses",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#C4162A",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#37872D"
+                "id": "custom.hidden",
+                "value": true
               }
             ]
           },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 9,
-        "y": 0
-      },
-      "id": 14,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Field"
             },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "1_proto_codes",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"404\")  FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
+            "properties": [
               {
-                "params": [
-                  "500"
-                ],
-                "type": "field"
+                "id": "displayName",
+                "value": "Code"
               },
               {
-                "params": [],
-                "type": "mean"
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "CODE_0": {
+                        "index": 0,
+                        "text": "CODE_0 (Success)"
+                      },
+                      "CODE_104": {
+                        "index": 2,
+                        "text": "CODE_104 (Connection reset by peer)"
+                      },
+                      "CODE_110": {
+                        "index": 1,
+                        "text": "CODE_110 (Connection timed out)"
+                      },
+                      "CODE_71": {
+                        "index": 3,
+                        "text": "CODE_71 (Protocol error)"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
               }
             ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Error responses",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#C4162A",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#37872D"
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
+          }
+        ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 12,
-        "y": 0
-      },
-      "id": 15,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "1_proto_codes",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"504\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time(10s) fill(0)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "504"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Timeout responses",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#C4162A",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#37872D"
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 15,
-        "y": 0
-      },
-      "id": 18,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "1_proto_codes",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "404"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Not found responses",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#C4162A",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#37872D"
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 18,
-        "y": 0
-      },
-      "id": 16,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "1_proto_codes",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "301"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Redirect responses",
-      "type": "stat"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "mappings": [
-            {
-              "options": {
-                "match": "null",
-                "result": {
-                  "text": "N/A"
-                }
-              },
-              "type": "special"
-            }
-          ],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#C4162A",
-                "value": null
-              },
-              {
-                "color": "rgba(237, 129, 40, 0.89)",
-                "value": null
-              },
-              {
-                "color": "#37872D"
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 3,
-        "x": 21,
-        "y": 0
-      },
-      "id": 19,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "horizontal",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      },
-      "pluginVersion": "10.1.1",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "hide": false,
-          "measurement": "1_proto_codes",
-          "orderByTime": "ASC",
-          "policy": "autogen",
-          "query": "SELECT mean(\"0\") FROM \"autogen\".\"proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "502"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "title": "Bad gateway responses",
-      "type": "stat"
-    },
-    {
-      "aliasColors": {
-        "RPS": "rgb(142, 0, 16)",
-        "q100": "light-blue",
-        "q50": "rgb(255, 22, 25)",
-        "q75": "light-red",
-        "q80": "dark-orange",
-        "q85": "semi-dark-orange",
-        "q90": "yellow",
-        "q95": "light-green",
-        "q98": "dark-green",
-        "q99": "dark-blue"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fill": 10,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
+        "h": 6,
         "w": 12,
-        "x": 0,
-        "y": 5
+        "x": 12,
+        "y": 7
       },
-      "hiddenSeries": false,
-      "id": 2,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pluginVersion": "10.1.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
+      "id": 22,
+      "links": [
         {
-          "alias": "RPS",
-          "fill": 0,
-          "linewidth": 2,
-          "yaxis": 2
+          "title": "Net code semantic",
+          "url": "https://yandextank.readthedocs.io/en/latest/tutorial.html#results-in-phout"
         }
       ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "options": {
+        "cellHeight": "sm",
+        "footer": {
+          "countRows": false,
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "frameIndex": 1,
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "10.1.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "1_proto_codes",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT sum(*) as \"CODE\" FROM \"${test_id}_net_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "table",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "sum"
+              },
+              {
+                "params": [
+                  "HTTP"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        }
+      ],
+      "title": "Yandex tank codes",
+      "transformations": [
+        {
+          "id": "reduce",
+          "options": {
+            "labelsToFields": false,
+            "reducers": [
+              "sum"
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 23,
+      "panels": [],
+      "title": "Charts",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PC4B52EEB0AADD047"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Time",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "ms"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Requests per second"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-YlRd"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Responses per second"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#000000",
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/^q/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "red",
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 34
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 2,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
       "targets": [
         {
           "alias": "$col",
@@ -1000,6 +910,8 @@
           "measurement": "1_overall_quantiles",
           "orderByTime": "ASC",
           "policy": "autogen",
+          "query": "SELECT median(\"q${quantile}\") AS \"q${quantile}\" FROM \"autogen\".\"${test_id}_overall_quantiles\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1191,6 +1103,8 @@
           "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "autogen",
+          "query": "SELECT mean(\"RPS\") AS \"Responses per second\" FROM \"autogen\".\"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
           "select": [
@@ -1207,7 +1121,57 @@
               },
               {
                 "params": [
-                  "RPS"
+                  "Responses per second"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "1_overall_meta",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT mean(\"planned_requests\") AS \"Requests per second\" FROM \"autogen\".\"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "planned_requests"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "Requests per second"
                 ],
                 "type": "alias"
               }
@@ -1216,89 +1180,134 @@
           "tags": []
         }
       ],
-      "thresholds": [],
-      "timeRegions": [],
       "title": "Response Times",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "ms",
-          "label": "Time",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": "RPS",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
+      "type": "timeseries"
     },
     {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "datasource": {
         "type": "influxdb",
         "uid": "PC4B52EEB0AADD047"
       },
-      "fill": 0,
-      "fillGradient": 0,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Used threads",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Responses per second"
+            },
+            "properties": [
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Requests per second"
+            },
+            "properties": [
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-YlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
       "gridPos": {
         "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 5
+        "w": 24,
+        "x": 0,
+        "y": 23
       },
-      "hiddenSeries": false,
       "id": 4,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
       "links": [],
-      "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pluginVersion": "10.1.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "RPS",
-          "linewidth": 2,
-          "yaxis": 2
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
         }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      },
+      "pluginVersion": "10.1.1",
       "targets": [
         {
           "alias": "Threads",
@@ -1323,6 +1332,8 @@
           "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"active_threads\") FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1342,7 +1353,7 @@
           "tags": []
         },
         {
-          "alias": "RPS",
+          "alias": "Responses per second",
           "datasource": {
             "type": "influxdb",
             "uid": "PC4B52EEB0AADD047"
@@ -1364,6 +1375,8 @@
           "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"RPS\") AS \"Responses per second\" FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
           "select": [
@@ -1377,103 +1390,742 @@
               {
                 "params": [],
                 "type": "mean"
+              },
+              {
+                "params": [
+                  "Responses per second"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Requests per second",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "1_overall_meta",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"planned_requests\") AS \"Requests per second\" FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "planned_requests"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "Requests per second"
+                ],
+                "type": "alias"
               }
             ]
           ],
           "tags": []
         }
       ],
-      "thresholds": [],
-      "timeRegions": [],
       "title": "Threads",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
+      "type": "timeseries"
     },
     {
-      "aliasColors": {
-        "RPS": "dark-red",
-        "http_0": "dark-purple",
-        "http_200": "dark-green",
-        "http_301": "light-orange",
-        "http_302": "semi-dark-orange",
-        "http_404": "light-red",
-        "http_500": "semi-dark-red",
-        "http_504": "dark-purple"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
       "datasource": {
         "type": "influxdb",
         "uid": "PC4B52EEB0AADD047"
       },
-      "fill": 10,
-      "fillGradient": 0,
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Number",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 20,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "OK"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RPS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "net_0"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "net_104"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "net_110"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Responses per second"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Requests per second"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-YlRd"
+                }
+              }
+            ]
+          }
+        ]
+      },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 13
+        "y": 31
       },
-      "hiddenSeries": false,
-      "id": 6,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
+      "id": 8,
       "links": [],
-      "nullPointMode": "connected",
       "options": {
-        "alertThreshold": true
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
       },
-      "paceLength": 10,
-      "percentage": false,
       "pluginVersion": "10.1.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
+      "targets": [
         {
-          "alias": "RPS",
-          "fill": 0,
-          "linewidth": 2,
-          "yaxis": 2
+          "alias": "$col",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "1_net_codes",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"0\") AS \"net_0\", mean(\"110\") AS \"net_110\", mean(\"104\") AS \"net_104\", mean(\"OK\") AS \"OK\" FROM \"${test_id}_net_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "0"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "net_0"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "110"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "net_110"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "104"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "net_104"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "OK"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "OK"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Responses per second",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "measurement": "1_overall_meta",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"RPS\") AS \"Responses per second\" FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "B",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "RPS"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "Responses per second"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
+        },
+        {
+          "alias": "Requests per second",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "1_overall_meta",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT mean(\"planned_requests\") AS \"Requests per second\" FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "planned_requests"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "Requests per second"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
+      "title": "Net codes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "PC4B52EEB0AADD047"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "Number",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green"
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "RPS"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Unknown status"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_200"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-green",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_301"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_302"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_404"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "light-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_500"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "semi-dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_504"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-purple",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Requests per seconds"
+            },
+            "properties": [
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "custom.lineWidth",
+                "value": 2
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-YlRd",
+                  "seriesBy": "last"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Response per seconds"
+            },
+            "properties": [
+              {
+                "id": "custom.axisLabel",
+                "value": "Number per second"
+              },
+              {
+                "id": "color",
+                "value": {
+                  "mode": "continuous-BlPu"
+                }
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "id": 6,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "10.1.1",
       "targets": [
         {
           "alias": "$col",
@@ -1498,6 +2150,8 @@
           "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"200\") AS \"http_200\", mean(\"404\") AS \"http_404\", mean(\"500\") AS \"http_500\", mean(\"504\") AS \"http_504\", mean(\"301\") AS \"http_301\", mean(\"302\") AS \"http_302\", mean(\"0\") AS \"Unknown status\" FROM \"${test_id}_proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
           "select": [
@@ -1622,7 +2276,7 @@
               },
               {
                 "params": [
-                  "http_0"
+                  "Unknown status"
                 ],
                 "type": "alias"
               }
@@ -1631,7 +2285,7 @@
           "tags": []
         },
         {
-          "alias": "RPS",
+          "alias": "Response per seconds",
           "datasource": {
             "type": "influxdb",
             "uid": "PC4B52EEB0AADD047"
@@ -1653,6 +2307,8 @@
           "measurement": "1_overall_meta",
           "orderByTime": "ASC",
           "policy": "default",
+          "query": "SELECT mean(\"RPS\") FROM \"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
           "refId": "B",
           "resultFormat": "time_series",
           "select": [
@@ -1670,269 +2326,60 @@
             ]
           ],
           "tags": []
+        },
+        {
+          "alias": "Requests per seconds",
+          "datasource": {
+            "type": "influxdb",
+            "uid": "PC4B52EEB0AADD047"
+          },
+          "groupBy": [
+            {
+              "params": [
+                "$__interval"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "null"
+              ],
+              "type": "fill"
+            }
+          ],
+          "hide": false,
+          "measurement": "1_overall_meta",
+          "orderByTime": "ASC",
+          "policy": "autogen",
+          "query": "SELECT mean(\"planned_requests\") AS \"Requests per second\" FROM \"autogen\".\"${test_id}_overall_meta\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "rawQuery": true,
+          "refId": "C",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "planned_requests"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [],
+                "type": "mean"
+              },
+              {
+                "params": [
+                  "Requests per second"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": []
         }
       ],
-      "thresholds": [],
-      "timeRegions": [],
       "title": "HTTP codes",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
-    },
-    {
-      "aliasColors": {
-        "OK": "dark-green",
-        "RPS": "dark-red",
-        "net_0": "dark-orange",
-        "net_104": "light-red",
-        "net_110": "semi-dark-blue"
-      },
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "datasource": {
-        "type": "influxdb",
-        "uid": "PC4B52EEB0AADD047"
-      },
-      "fill": 2,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 12,
-        "y": 13
-      },
-      "hiddenSeries": false,
-      "id": 8,
-      "legend": {
-        "avg": false,
-        "current": false,
-        "max": false,
-        "min": false,
-        "show": true,
-        "total": false,
-        "values": false
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "connected",
-      "options": {
-        "alertThreshold": true
-      },
-      "paceLength": 10,
-      "percentage": false,
-      "pluginVersion": "10.1.1",
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "RPS",
-          "fill": 0,
-          "linewidth": 2,
-          "yaxis": 2
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "alias": "$col",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "1_net_codes",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "0"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "net_0"
-                ],
-                "type": "alias"
-              }
-            ],
-            [
-              {
-                "params": [
-                  "110"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "net_110"
-                ],
-                "type": "alias"
-              }
-            ],
-            [
-              {
-                "params": [
-                  "104"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "net_104"
-                ],
-                "type": "alias"
-              }
-            ],
-            [
-              {
-                "params": [
-                  "OK"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              },
-              {
-                "params": [
-                  "OK"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "tags": []
-        },
-        {
-          "alias": "RPS",
-          "datasource": {
-            "type": "influxdb",
-            "uid": "PC4B52EEB0AADD047"
-          },
-          "groupBy": [
-            {
-              "params": [
-                "$__interval"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "null"
-              ],
-              "type": "fill"
-            }
-          ],
-          "measurement": "1_overall_meta",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "refId": "B",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "RPS"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "mean"
-              }
-            ]
-          ],
-          "tags": []
-        }
-      ],
-      "thresholds": [],
-      "timeRegions": [],
-      "title": "Net codes",
-      "tooltip": {
-        "shared": true,
-        "sort": 0,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "mode": "time",
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        },
-        {
-          "format": "short",
-          "logBase": 1,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false
-      }
+      "type": "timeseries"
     }
   ],
   "refresh": "1s",
@@ -1940,11 +2387,92 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": []
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "99",
+          "value": "99"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "quantile",
+        "options": [
+          {
+            "selected": false,
+            "text": "100",
+            "value": "100"
+          },
+          {
+            "selected": true,
+            "text": "99",
+            "value": "99"
+          },
+          {
+            "selected": false,
+            "text": "95",
+            "value": "95"
+          },
+          {
+            "selected": false,
+            "text": "90",
+            "value": "90"
+          },
+          {
+            "selected": false,
+            "text": "85",
+            "value": "85"
+          },
+          {
+            "selected": false,
+            "text": "80",
+            "value": "80"
+          },
+          {
+            "selected": false,
+            "text": "75",
+            "value": "75"
+          },
+          {
+            "selected": false,
+            "text": "50",
+            "value": "50"
+          }
+        ],
+        "query": "100, 99, 95, 90, 85, 80, 75, 50",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "1",
+          "value": "1"
+        },
+        "description": "ID of the load test",
+        "hide": 0,
+        "includeAll": false,
+        "multi": false,
+        "name": "test_id",
+        "options": [
+          {
+            "selected": true,
+            "text": "1",
+            "value": "1"
+          }
+        ],
+        "query": "1",
+        "queryValue": "1",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
   },
   "time": {
-    "from": "2023-11-26 14:45:41",
-    "to": "2023-11-26 14:46:42"
+    "from": "now-15m",
+    "to": "now"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1964,8 +2492,8 @@
     ]
   },
   "timezone": "",
-  "title": "Test",
-  "uid": "metrics",
-  "version": 1,
+  "title": "Results of load tests",
+  "uid": "yandex-tank",
+  "version": 23,
   "weekStart": ""
 }

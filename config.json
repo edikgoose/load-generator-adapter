@@ -1,0 +1,18 @@
+[
+  {
+    "host": "hostname",
+    "port": "80",
+    "templates": [
+      {
+        "id": "1",
+        "type": "circuit-breaker",
+        "config": [
+          {
+            "param": "% of error to switch",
+            "value": "20"
+          }
+        ]
+      }
+    ]
+  }
+]

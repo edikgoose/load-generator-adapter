@@ -31,7 +31,7 @@ class GrafanaDashboardService(
     fun createDashboard(loadTest: LoadTest, duration: Duration): String {
         try {
             val dashboardConfig = makeDashboardConfig(loadTest.id!!, loadTest.externalId!!, duration)
-            logger.info("Grafana dashboard config: $dashboardConfig")
+//            logger.info("Grafana dashboard config: $dashboardConfig")
             return grafanaProperties.baseUrl + grafanaFeignClient.pushDashboard(dashboardConfig).url
         } catch (e: RuntimeException) {
             logger.error("Error during grafana dashboard push. The test will be rollback", e)

@@ -79,9 +79,9 @@ class LoadTestService(
 
         val duration: Duration = yandexTankTestConfigService.getDuration(configAsString = scenario.config!!)
         // Создаем дашборд для теста
-        val grafanaDashboardUrl = grafanaDashboardService.createDashboard(loadTest, duration)
+//        val grafanaDashboardUrl = grafanaDashboardService.createDashboard(loadTest, duration)
 
-        loadTest.dashboardUrl = grafanaDashboardUrl
+        loadTest.dashboardUrl = ""
 
         loadTestDbService.saveLoadTest(loadTest)
         logger.info("Load test has successfully started. External id: ${loadTest.externalId}")

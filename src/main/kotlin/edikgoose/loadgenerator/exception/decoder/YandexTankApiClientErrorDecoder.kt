@@ -16,7 +16,7 @@ class YandexTankApiClientErrorDecoder(private val mapper: ObjectMapper) : ErrorD
                 throw SessionAlreadyStoppedException("This session is already stopped.")
             }
             HttpStatus.NOT_FOUND.value() -> {
-                throw SessionNotFoundException("No session with this ID")
+                throw SessionNotFoundException("Yandex.Tank doesn't have session with this ID")
             }
             HttpStatus.SERVICE_UNAVAILABLE.value() -> {
                 throw AnotherSessionIsRunningException("Another session is already running")

@@ -16,7 +16,7 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:liquibase/db.changelog-master.xml
-    drop-first: false
+#    drop-first: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5421/load_generator_adapter
