@@ -17,7 +17,7 @@ services:
       - "8888:8888"
     volumes:
       - ${PWD}/tests:/var/loadtest
-    networks:
+    networks: &network
       - foodapi_network
 
   influx:
@@ -27,8 +27,7 @@ services:
       - "8086:8086"
     environment:
       INFLUXDB_DB: metrics
-    networks:
-      - foodapi_network
+    networks: *network
 
   grafana:
     image: grafana/grafana:latest
@@ -43,11 +42,10 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
-#      GF_INSTALL_PLUGINS: grafana-clock-panel, briangann-gauge-panel, natel-plotly-panel, grafana-simple-json-datasource
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: true
+      GF_INFLUX_DB_URL: http://influx:8086
     restart: on-failure
-    networks:
-      - foodapi_network
+    networks: *network
 
   postgresql:
     image: postgres:12
@@ -58,8 +56,7 @@ services:
       - POSTGRES_DB=load_generator_adapter
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-    networks:
-      - foodapi_network
+    networks: *network
 
   load-generator-adapter:
     image: edikgoose/load-generator-adapter:latest
@@ -68,13 +65,12 @@ services:
       TZ: "Europe/Moscow"
     ports:
       - "8087:8087"
-    networks:
-      - foodapi_network
+    networks: *network
 
-  web-server:
-    image: edikgoose/hello-world-web:latest
-    container_name: web-server
+  consul:
+    image: hashicorp/consul:1.18
+    container_name: consul
+    hostname: localhost
     ports:
-      - "8080:8080"
-    networks:
-      - foodapi_network
+      - "8500:8500"
+    networks: *network

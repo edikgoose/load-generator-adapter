@@ -9,7 +9,7 @@ datasources:
     type: influxdb
     access: proxy
     orgId: 1
-    url: http://influx:8086
+    url: ${GF_INFLUX_DB_URL}
     database: metrics
     isDefault: true
     editable: false
