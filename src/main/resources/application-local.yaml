@@ -31,8 +31,4 @@ load-generator-engine:
 
   grafana:
     base-url: http://localhost:3001
-    username: ${GRAFANA_USERNAME:admin}
-    password: ${GRAFANA_PASSWORD:admin}
-
-
 

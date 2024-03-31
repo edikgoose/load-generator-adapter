@@ -1,9 +1,11 @@
 package edikgoose.loadgenerator.service
 
+import edikgoose.loadgenerator.configuration.GrafanaProperties
 import edikgoose.loadgenerator.converter.toLoadTestOutputDto
 import edikgoose.loadgenerator.dto.LoadTestOutputDto
 import edikgoose.loadgenerator.entity.LoadTest
 import edikgoose.loadgenerator.entity.Scenario
+import edikgoose.loadgenerator.enumeration.LoadTestStage
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
 import edikgoose.loadgenerator.exception.NotFoundException
 import edikgoose.loadgenerator.exception.SessionAlreadyStoppedException
@@ -14,18 +16,18 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import kotlin.time.Duration
+import java.time.Instant
 
 /**
  * Сервис для управления нагрузочными тестами
  */
 @Service
 class LoadTestService(
-    val grafanaDashboardService: GrafanaDashboardService,
     val yandexTankApiFeignClient: YandexTankApiFeignClient,
     val loadTestDbService: LoadTestDbService,
     val yandexTankTestConfigService: YandexTankTestConfigService,
-    val scenarioRepository: ScenarioRepository
+    val scenarioRepository: ScenarioRepository,
+    val grafanaProperties: GrafanaProperties
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestService::class.java)
 
@@ -48,8 +50,9 @@ class LoadTestService(
                 name = name,
                 status = LoadTestStatus.CREATED,
                 externalId = null,
-                dashboardUrl = null,
                 createdDate = null,
+                finishDate = null,
+                stage = null
             )
         )
 
@@ -77,15 +80,9 @@ class LoadTestService(
 
         loadTest.externalId = yandexTankTestRunOutputDto.session
 
-        val duration: Duration = yandexTankTestConfigService.getDuration(configAsString = scenario.config!!)
-        // Создаем дашборд для теста
-//        val grafanaDashboardUrl = grafanaDashboardService.createDashboard(loadTest, duration)
-
-        loadTest.dashboardUrl = ""
-
         loadTestDbService.saveLoadTest(loadTest)
         logger.info("Load test has successfully started. External id: ${loadTest.externalId}")
-        return loadTest.toLoadTestOutputDto()
+        return loadTest.toLoadTestOutputDto(grafanaBaseUrl = grafanaProperties.baseUrl)
     }
 
     fun getLoadTestStatus(loadTestId: Long): LoadTestOutputDto {
@@ -96,16 +93,28 @@ class LoadTestService(
             loadTest.status == LoadTestStatus.FAILED ||
             loadTest.status == LoadTestStatus.STOPPED
         ) {
-            return loadTest.toLoadTestOutputDto()
+            return loadTest.toLoadTestOutputDto(grafanaBaseUrl = grafanaProperties.baseUrl)
         }
 
         val loadTestStatusDto = yandexTankApiFeignClient.getLoadTestStatus(loadTest.externalId!!)
 
         // Обновляем статус теста в базе
         loadTest.status = loadTestStatusDto.status.toLoadTestStatus()
+        loadTest.stage = loadTestStatusDto.currentStage?.toLoadTestStage()
+
+        // Обновляем дату финиша теста
+        val instantNow = Instant.now()
+        if (loadTest.finishDate == null &&
+            (loadTest.status == LoadTestStatus.FINISHED ||
+                    loadTest.status == LoadTestStatus.FAILED ||
+                    loadTest.status == LoadTestStatus.STOPPED)
+        ) {
+            loadTest.finishDate = instantNow
+        }
+
         loadTestDbService.saveLoadTest(loadTest)
 
-        return loadTest.toLoadTestOutputDto()
+        return loadTest.toLoadTestOutputDto(grafanaBaseUrl = grafanaProperties.baseUrl)
     }
 
     fun getAllLoadTests(): List<LoadTestOutputDto> {
@@ -124,11 +133,7 @@ class LoadTestService(
     fun stopLoadTest(loadTestId: Long): LoadTestOutputDto {
         val loadTest = loadTestDbService.getLoadTestById(loadTestId)
         yandexTankApiFeignClient.stopLoadTest(loadTest.externalId!!)
-
-        loadTest.status = LoadTestStatus.STOPPED
-        loadTestDbService.saveLoadTest(loadTest)
-
-        return loadTest.toLoadTestOutputDto()
+        return getLoadTestStatus(loadTestId)
     }
 
     /**
@@ -141,7 +146,7 @@ class LoadTestService(
         if (statusDto.status == "failed") { // тест почему-то зафэйлился
             logger.warn("Test ${loadTest.id} is failed")
             try {
-            yandexTankApiFeignClient.stopLoadTest(loadTestId = loadTest.externalId!!)
+                yandexTankApiFeignClient.stopLoadTest(loadTestId = loadTest.externalId!!)
             } catch (e: SessionAlreadyStoppedException) {
                 logger.info("Load test with id ${loadTest.id} is already stopped")
             }
@@ -159,8 +164,10 @@ class LoadTestService(
         // Загружаем файл в текущую сессию
         val uploadFileResponseDto = yandexTankApiFeignClient.uploadFile(
             sessionId = loadTest.externalId!!,
-            filename = loadTest.scenario.ammo?.name ?: throw YandexTankException("Ammo ${loadTest.scenario.ammo!!.id} does not have ammo file name"),
-            fileContent = loadTest.scenario.ammo?.ammo ?: throw YandexTankException("Ammo ${loadTest.scenario.ammo!!.id} does not have ammo file content"),
+            filename = loadTest.scenario.ammo?.name
+                ?: throw YandexTankException("Ammo ${loadTest.scenario.ammo!!.id} does not have ammo file name"),
+            fileContent = loadTest.scenario.ammo?.ammo
+                ?: throw YandexTankException("Ammo ${loadTest.scenario.ammo!!.id} does not have ammo file content"),
         )
         logger.info("File is loaded: $uploadFileResponseDto")
 
@@ -178,6 +185,23 @@ class LoadTestService(
         else -> {
             logger.error("Unexpected test status: $this")
             LoadTestStatus.FAILED
+        }
+    }
+
+    private fun String.toLoadTestStage(): LoadTestStage? = when (this) {
+        "lock" -> LoadTestStage.LOCK
+        "init" -> LoadTestStage.INIT
+        "configure" -> LoadTestStage.CONFIGURE
+        "prepare" -> LoadTestStage.PREPARE
+        "start" -> LoadTestStage.START
+        "poll" -> LoadTestStage.POLL
+        "end" -> LoadTestStage.END
+        "postprocess" -> LoadTestStage.POSTPROCESS
+        "unlock" -> LoadTestStage.UNLOCK
+        "finished" -> LoadTestStage.FINISHED
+        else -> {
+            logger.error("Unexpected test stage: $this")
+            null
         }
     }
 }

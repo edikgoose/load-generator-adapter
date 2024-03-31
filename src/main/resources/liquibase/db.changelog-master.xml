@@ -5,5 +5,5 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
     <include file="liquibase/ammo.xml"/>
     <include file="liquibase/scenario.xml"/>
-    <include file="liquibase/load_test_scenario.xml"/>
+    <include file="/liquibase/load_test.xml"/>
 </databaseChangeLog>

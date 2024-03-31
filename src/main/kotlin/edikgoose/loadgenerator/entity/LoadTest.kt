@@ -1,6 +1,7 @@
 package edikgoose.loadgenerator.entity
 
 import com.vladmihalcea.hibernate.type.array.StringArrayType
+import edikgoose.loadgenerator.enumeration.LoadTestStage
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
 import org.hibernate.annotations.TypeDef
 import org.springframework.data.annotation.CreatedDate
@@ -35,10 +36,14 @@ data class LoadTest(
     @Column(name = "external_id")
     var externalId: String?,
 
-    @Column(name = "dashboard_url")
-    var dashboardUrl: String?,
-
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
     var createdDate: Instant?,
+
+    @Column(name = "finish_date")
+    var finishDate: Instant?,
+
+    @Column(name = "stage")
+    @Enumerated(EnumType.STRING)
+    var stage: LoadTestStage?
 )
