@@ -31,11 +31,6 @@ spring:
       max-request_size: 215MB
       file-size-threshold: 2KB
 
-
-file:
-  upload-dir: ${FILE_UPLOAD_DIR:files}
-
-
 load-generator-engine:
   yandex-tank:
     base-url: ${YANDEX_TANK_BASE_URL:http://tank-server:8888}

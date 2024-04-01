@@ -1,13 +1,11 @@
 package edikgoose.loadgenerator.exception.handler
 
 import edikgoose.loadgenerator.controller.AmmoController
-import edikgoose.loadgenerator.controller.FileController
 import edikgoose.loadgenerator.controller.LoadTestController
 import edikgoose.loadgenerator.controller.ScenarioController
 import edikgoose.loadgenerator.controller.SystemConfigurationController
 import edikgoose.loadgenerator.exception.AmmoNameAlreadyExistsException
 import edikgoose.loadgenerator.exception.AnotherSessionIsRunningException
-import edikgoose.loadgenerator.exception.FileStorageException
 import edikgoose.loadgenerator.exception.GrafanaDashboardPushException
 import edikgoose.loadgenerator.exception.IllegalConfigException
 import edikgoose.loadgenerator.exception.NotFoundException
@@ -20,7 +18,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.io.FileNotFoundException
 
-@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class, AmmoController::class, FileController::class, SystemConfigurationController::class])
+@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class, AmmoController::class, SystemConfigurationController::class])
 class LoadTestAdapterHandler {
     @ExceptionHandler(value = [YandexTankException::class])
     protected fun handleYandexTankException(ex: YandexTankException): ResponseEntity<Any> {
@@ -63,12 +61,6 @@ class LoadTestAdapterHandler {
     protected fun handleFileNotFoundException(ex: FileNotFoundException): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ResponseEntity<String>(ex.message, HttpStatus.NOT_FOUND))
-    }
-
-    @ExceptionHandler(value = [FileStorageException::class])
-    protected fun handleFileStorageException(ex: FileStorageException): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(ResponseEntity<String>(ex.message, HttpStatus.INTERNAL_SERVER_ERROR))
     }
 
     @ExceptionHandler(value = [AmmoNameAlreadyExistsException::class, IllegalConfigException::class])
