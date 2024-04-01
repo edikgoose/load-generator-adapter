@@ -56,14 +56,14 @@ class LoadTestService(
             )
         )
 
-        logger.info("Config for Yandex tank:\n${scenario.config}")
+        logger.info("Config for Yandex tank:\n${scenario.yandexTankConfig}")
 
         val yandexTankTestRunOutputDto =
             if (scenario.ammo != null) { // если указан файл для патрон, значит запустить тест мы должны через break stage
                 loadTest.status = LoadTestStatus.LOCKED
                 yandexTankApiFeignClient.runLoadTest(
                     yandexTankTestConfigService.substitutePrefixMeasurement(
-                        scenario.config!!,
+                        scenario.yandexTankConfig!!,
                         loadTest.id!!.toString()
                     ),
                     breakStage = "init"
@@ -72,7 +72,7 @@ class LoadTestService(
                 loadTest.status = LoadTestStatus.CREATED
                 yandexTankApiFeignClient.runLoadTest(
                     yandexTankTestConfigService.substitutePrefixMeasurement(
-                        scenario.config!!,
+                        scenario.yandexTankConfig!!,
                         loadTest.id!!.toString()
                     )
                 )

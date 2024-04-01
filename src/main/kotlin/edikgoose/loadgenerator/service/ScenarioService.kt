@@ -20,7 +20,14 @@ class ScenarioService(
     fun createScenario(name: String, config: String): ScenarioOutputDto {
         val yandexTankConfig = yandexTankTestConfigService.parseYamlConfig(config)
 
-        val scenario = Scenario(id = null, name = name, ammo = null, config = config, createdDate = null)
+        val scenario = Scenario(
+            id = null,
+            name = name,
+            ammo = null,
+            systemConfiguration = null,
+            yandexTankConfig = config,
+            createdDate = null,
+        )
 
         yandexTankConfig.phantom?.ammoType?.let {
             when (it) {

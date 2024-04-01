@@ -1,0 +1,38 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="system_configuration_id_seq" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <sequenceExists sequenceName="system_configuration_id_seq"/>
+            </not>
+        </preConditions>
+        <createSequence sequenceName="system_configuration_id_seq" incrementBy="1" cacheSize="50" startValue="1"/>
+    </changeSet>
+    <changeSet id="system_configuration" author="edikgoose">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="system_configuration"/>
+            </not>
+        </preConditions>
+        <createTable tableName="system_configuration" remarks="Системная конфигурация">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="system_configuration_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="system_configuration__id_idx"/>
+            </column>
+            <column name="name" type="text" remarks="System configuration name">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="text" remarks="System configuration type">
+                <constraints nullable="false"/>
+            </column>
+            <column name="configuration" type="TEXT" remarks="System configuration"/>
+            <column name="consul_key" type="TEXT" remarks="Key for KV store of Consul"/>
+            <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
+                    remarks="Creation date of system configuration">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

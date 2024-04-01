@@ -6,7 +6,7 @@ import edikgoose.loadgenerator.entity.Scenario
 fun Scenario.toScenarioOutputDto() = ScenarioOutputDto(
     id = this.id!!,
     name = this.name!!,
-    scenarioConfig = this.config!!,
+    scenarioConfig = this.yandexTankConfig!!,
     createdDate = this.createdDate!!,
     ammoId = this.ammo?.id
 )

@@ -24,12 +24,16 @@
             <column name="name" type="text" remarks="Название сценария">
                 <constraints nullable="false"/>
             </column>
-            <column name="config" type="TEXT" remarks="Конфиг сценария">
+            <column name="yandex_tank_config" type="TEXT" remarks="Конфиг сценария">
                 <constraints nullable="false"/>
             </column>
             <column name="ammo_id" type="BIGINT" remarks="ID боеприпасов">
                 <constraints nullable="true" referencedTableName="ammo" referencedColumnNames="id"
                              foreignKeyName="scenario__ammo_id_idx"/>
+            </column>
+            <column name="system_configuration_id" type="BIGINT" remarks="ID конфигурации системы">
+                <constraints nullable="true" referencedTableName="system_configuration" referencedColumnNames="id"
+                             foreignKeyName="system_configuration_id_idx"/>
             </column>
             <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
                     remarks="Дата создания записи">

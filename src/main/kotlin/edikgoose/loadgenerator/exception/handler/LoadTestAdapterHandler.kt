@@ -4,6 +4,7 @@ import edikgoose.loadgenerator.controller.AmmoController
 import edikgoose.loadgenerator.controller.FileController
 import edikgoose.loadgenerator.controller.LoadTestController
 import edikgoose.loadgenerator.controller.ScenarioController
+import edikgoose.loadgenerator.controller.SystemConfigurationController
 import edikgoose.loadgenerator.exception.AmmoNameAlreadyExistsException
 import edikgoose.loadgenerator.exception.AnotherSessionIsRunningException
 import edikgoose.loadgenerator.exception.FileStorageException
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import java.io.FileNotFoundException
 
-@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class, AmmoController::class, FileController::class])
+@ControllerAdvice(assignableTypes = [LoadTestController::class, ScenarioController::class, AmmoController::class, FileController::class, SystemConfigurationController::class])
 class LoadTestAdapterHandler {
     @ExceptionHandler(value = [YandexTankException::class])
     protected fun handleYandexTankException(ex: YandexTankException): ResponseEntity<Any> {
