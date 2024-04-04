@@ -33,12 +33,21 @@ class ScenarioController(
         description = "Название сценария",
         example = "Сценарий до 500 рпс"
     )
+    @Parameter(
+        name = "systemConfigurationId",
+        `in` = ParameterIn.QUERY,
+        schema = Schema(type = "integer", format = "int64"),
+        required = false,
+        description = "ID конфигурации",
+        example = "1"
+    )
     @Operation(summary = "Метод для создания сценария нагрузки")
     fun createScenario(
         @RequestParam(value = "name", required = true) name: String,
+        @RequestParam(value = "systemConfigurationId", required = false) systemConfigurationId: Long,
         @RequestBody config: String
     ): ResponseEntity<ScenarioOutputDto> =
-        ResponseEntity(scenarioService.createScenario(name, config), HttpStatus.OK)
+        ResponseEntity(scenarioService.createScenario(name, systemConfigurationId, config), HttpStatus.OK)
 
     @DeleteMapping("$BASE_URL/{id}")
     @Operation(summary = "Метод для удаления сценария нагрузки")

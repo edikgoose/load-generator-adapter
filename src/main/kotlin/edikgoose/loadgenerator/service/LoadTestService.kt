@@ -7,6 +7,7 @@ import edikgoose.loadgenerator.entity.LoadTest
 import edikgoose.loadgenerator.entity.Scenario
 import edikgoose.loadgenerator.enumeration.LoadTestStage
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
+import edikgoose.loadgenerator.enumeration.SystemConfigurationType
 import edikgoose.loadgenerator.exception.NotFoundException
 import edikgoose.loadgenerator.exception.SessionAlreadyStoppedException
 import edikgoose.loadgenerator.exception.YandexTankException
@@ -27,7 +28,8 @@ class LoadTestService(
     val loadTestDbService: LoadTestDbService,
     val yandexTankTestConfigService: YandexTankTestConfigService,
     val scenarioRepository: ScenarioRepository,
-    val grafanaProperties: GrafanaProperties
+    val grafanaProperties: GrafanaProperties,
+    val systemConfigurationService: SystemConfigurationService,
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestService::class.java)
 
@@ -82,6 +84,11 @@ class LoadTestService(
 
         loadTestDbService.saveLoadTest(loadTest)
         logger.info("Load test has successfully started. External id: ${loadTest.externalId}")
+
+        if (loadTest.scenario.systemConfiguration?.type == SystemConfigurationType.CONSUL) {
+            systemConfigurationService.pollConfiguration(loadTestId = loadTest.id!!)
+        }
+
         return loadTest.toLoadTestOutputDto(grafanaBaseUrl = grafanaProperties.baseUrl)
     }
 

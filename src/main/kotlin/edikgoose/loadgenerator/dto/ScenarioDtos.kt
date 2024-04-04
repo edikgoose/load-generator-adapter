@@ -8,4 +8,5 @@ data class ScenarioOutputDto (
     val scenarioConfig: String,
     val createdDate: Instant,
     val ammoId: Long?,
+    val systemConfigurationDto: SystemConfigurationDto?,
 )

@@ -6,6 +6,9 @@ import edikgoose.loadgenerator.controller.ScenarioController
 import edikgoose.loadgenerator.controller.SystemConfigurationController
 import edikgoose.loadgenerator.exception.AmmoNameAlreadyExistsException
 import edikgoose.loadgenerator.exception.AnotherSessionIsRunningException
+import edikgoose.loadgenerator.exception.ConsulErrorException
+import edikgoose.loadgenerator.exception.ConsulKeyValueNotFoundAndConfigNotPutException
+import edikgoose.loadgenerator.exception.ConsulKeyValueNotFoundException
 import edikgoose.loadgenerator.exception.GrafanaDashboardPushException
 import edikgoose.loadgenerator.exception.IllegalConfigException
 import edikgoose.loadgenerator.exception.NotFoundException
@@ -51,8 +54,8 @@ class LoadTestAdapterHandler {
     }
 
 
-    @ExceptionHandler(value = [NotFoundException::class])
-    protected fun handleNotFoundException(ex: NotFoundException): ResponseEntity<Any> {
+    @ExceptionHandler(value = [NotFoundException::class, ConsulKeyValueNotFoundException::class])
+    protected fun handleNotFoundException(ex: RuntimeException): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .body(ResponseEntity<String>(ex.message, HttpStatus.NOT_FOUND))
     }
@@ -67,5 +70,17 @@ class LoadTestAdapterHandler {
     protected fun handleBadRequestExceptions(ex: RuntimeException): ResponseEntity<Any> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .body(ResponseEntity<String>(ex.message, HttpStatus.BAD_REQUEST))
+    }
+
+    @ExceptionHandler(value = [ConsulKeyValueNotFoundAndConfigNotPutException::class])
+    protected fun handleConsulKeyValueNotFoundAndConfigNotPutException(ex: ConsulKeyValueNotFoundAndConfigNotPutException): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .body(ResponseEntity<String>(ex.message, HttpStatus.BAD_REQUEST))
+    }
+
+    @ExceptionHandler(value = [ConsulErrorException::class])
+    protected fun handleConsulErrorException(ex: ConsulErrorException): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(ResponseEntity<String>(ex.message, HttpStatus.INTERNAL_SERVER_ERROR))
     }
 }

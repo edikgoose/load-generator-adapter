@@ -8,5 +8,6 @@ fun Scenario.toScenarioOutputDto() = ScenarioOutputDto(
     name = this.name!!,
     scenarioConfig = this.yandexTankConfig!!,
     createdDate = this.createdDate!!,
-    ammoId = this.ammo?.id
+    ammoId = this.ammo?.id,
+    systemConfigurationDto = this.systemConfiguration?.toDto(),
 )

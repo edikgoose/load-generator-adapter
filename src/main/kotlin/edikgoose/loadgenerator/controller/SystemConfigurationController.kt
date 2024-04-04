@@ -11,10 +11,11 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.constraints.NotNull
 
 @RestController
 @RequestMapping("/api/system-configuration")
@@ -34,7 +35,7 @@ class SystemConfigurationController(
     @Operation(summary = "Create configuration by accepting configuration itself")
     fun createConfig(
         @RequestParam(value = "name", required = true) name: String,
-        @RequestBody config: String
+        config: String
     ): ResponseEntity<SystemConfigurationDto> {
         return ResponseEntity.ok(systemConfigurationService.createDefaultConfig(name, config))
     }
@@ -60,8 +61,9 @@ class SystemConfigurationController(
     fun createConsulConfig(
         @RequestParam(value = "name", required = true) name: String,
         @RequestParam(value = "key", required = true) key: String,
+        config: String?
     ): ResponseEntity<SystemConfigurationDto>  {
-        return ResponseEntity.ok(systemConfigurationService.createConsulConfig(name, key))
+        return ResponseEntity.ok(systemConfigurationService.createConsulConfig(name, key, config))
     }
 
     @GetMapping("/{id}")
@@ -78,5 +80,22 @@ class SystemConfigurationController(
         @PathVariable(value = "id") id: Long,
     ): ResponseEntity<SystemConfigurationDto> {
         return ResponseEntity.ok(systemConfigurationService.getConfig(id))
+    }
+
+    @PutMapping("/{id}")
+    @Parameter(
+        name = "id",
+        `in` = ParameterIn.PATH,
+        schema = Schema(type = "integer", format = "int64"),
+        required = true,
+        description = "Configuration id",
+        example = "1"
+    )
+    @Operation(summary = "Update configuration by id")
+    fun updateConfig(
+        @PathVariable(value = "id") @NotNull id: Long,
+        @NotNull config: String
+    ): ResponseEntity<SystemConfigurationDto> {
+        return ResponseEntity.ok(systemConfigurationService.updateConfig(id, config = config))
     }
 }

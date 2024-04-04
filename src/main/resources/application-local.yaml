@@ -16,7 +16,7 @@ spring:
   liquibase:
     enabled: true
     change-log: classpath:liquibase/db.changelog-master.xml
-    drop-first: true
+#    drop-first: true
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5421/load_generator_adapter
@@ -24,6 +24,9 @@ spring:
     password: ${DB_PASSWORD:password}
     hikari:
       maximum-pool-size: 10
+
+consul:
+  url: ${CONSUL_URL:http://localhost:8500}
 
 load-generator-engine:
   yandex-tank:
