@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {
-    id("org.springframework.boot") version "2.7.16"
+    id("org.springframework.boot") version "3.1.8"
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
     kotlin("plugin.spring") version "1.8.22"
@@ -45,6 +45,8 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:1.6.15")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4")
     implementation("io.github.openfeign:feign-jackson:12.3")
+    implementation("com.vaadin:vaadin-bom:24.3.9")
+    implementation("com.vaadin:vaadin-spring-boot-starter:24.3.9")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")

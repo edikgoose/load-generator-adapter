@@ -1,18 +1,15 @@
 package edikgoose.loadgenerator.entity
 
-import com.vladmihalcea.hibernate.type.array.StringArrayType
 import edikgoose.loadgenerator.enumeration.LoadTestStage
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
-import org.hibernate.annotations.TypeDef
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "load_test")
 @EntityListeners(AuditingEntityListener::class)
-@TypeDef(name = "string-array", typeClass = StringArrayType::class)
 data class LoadTest(
     @Id
     @GeneratedValue(

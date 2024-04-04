@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import javax.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotBlank
 
 @RestController
 @Tag(name = "API для управления паронами", description = "API для управления патронами")
