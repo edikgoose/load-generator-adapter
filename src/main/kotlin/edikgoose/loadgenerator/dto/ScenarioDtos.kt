@@ -5,7 +5,7 @@ import java.time.Instant
 data class ScenarioOutputDto (
     val id: Long,
     val name: String,
-    val scenarioConfig: String,
+    val yandexTankConfig: String,
     val createdDate: Instant,
     val ammoId: Long?,
     val systemConfigurationDto: SystemConfigurationDto?,

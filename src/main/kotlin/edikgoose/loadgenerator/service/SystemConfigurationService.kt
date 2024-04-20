@@ -63,7 +63,7 @@ class SystemConfigurationService(
     }
 
     fun pollConfiguration(loadTestId: Long) {
-        val systemConfiguration: SystemConfiguration = loadTestRepository.findConfigurationById(loadTestId) ?:
+        val systemConfiguration: SystemConfiguration = loadTestRepository.findConfigurationOfLoadTestById(loadTestId) ?:
             throw NotFoundException(loadTestId, LoadTest::class.java)
 
         if (systemConfiguration.type == SystemConfigurationType.CONSUL) {

@@ -19,5 +19,13 @@ interface LoadTestRepository: JpaRepository<LoadTest, Long> {
         SELECT ld.scenario.systemConfiguration from LoadTest ld 
         WHERE ld.id = :id
     """)
-    fun findConfigurationById(id: Long): SystemConfiguration?
+    fun findConfigurationOfLoadTestById(id: Long): SystemConfiguration?
+
+
+    @Query("""
+        SELECT ld from LoadTest ld
+        WHERE ld.name like lower(concat('%', :nameFilter, '%'))
+        AND (COALESCE (:loadTestStatus, null) IS null OR ld.status = :loadTestStatus)
+    """)
+    fun searchLoadTests(nameFilter: String, loadTestStatus: LoadTestStatus?): List<LoadTest>
 }

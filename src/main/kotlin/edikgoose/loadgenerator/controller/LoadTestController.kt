@@ -58,7 +58,7 @@ class LoadTestController(val loadTestService: LoadTestService) {
     @GetMapping(BASE_URL)
     @Operation(summary = "Метод для получение статуса всех доступных тестов")
     fun getAllLoadTests(): ResponseEntity<List<LoadTestOutputDto>> {
-        return ResponseEntity(loadTestService.getAllLoadTests(), HttpStatus.OK)
+        return ResponseEntity(loadTestService.searchLoadTests(), HttpStatus.OK)
     }
 
     @GetMapping("${BASE_URL}/running")

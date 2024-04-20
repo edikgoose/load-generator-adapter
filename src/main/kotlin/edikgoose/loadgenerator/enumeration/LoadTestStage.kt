@@ -11,4 +11,5 @@ enum class LoadTestStage {
     POSTPROCESS,
     UNLOCK,
     FINISHED,
+    UNKNOWN
 }

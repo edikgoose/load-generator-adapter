@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {
+    id("com.vaadin") version "24.3.9"
     id("org.springframework.boot") version "3.1.8"
     id("io.spring.dependency-management") version "1.1.3"
     kotlin("jvm") version "1.8.22"
@@ -26,6 +27,7 @@ configurations {
 configure<DependencyManagementExtension> {
     imports {
         mavenBom("org.springframework.cloud:spring-cloud-dependencies:2021.0.3")
+        mavenBom("com.vaadin:vaadin-bom:24.3.9")
     }
 }
 
@@ -38,6 +40,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-devtools")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.liquibase:liquibase-core:4.24.0")
@@ -45,13 +48,13 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-ui:1.6.15")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign:4.0.4")
     implementation("io.github.openfeign:feign-jackson:12.3")
-    implementation("com.vaadin:vaadin-bom:24.3.9")
+    implementation("com.github.mvysny.karibudsl:karibu-dsl:2.1.3")
+    implementation("com.vaadin:vaadin-core:24.3.9")
     implementation("com.vaadin:vaadin-spring-boot-starter:24.3.9")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    implementation("com.vladmihalcea:hibernate-types-52:2.20.0")
 }
 
 tasks.withType<KotlinCompile> {
@@ -63,6 +66,13 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+defaultTasks("clean", "vaadinBuildFrontend", "build")
+
+vaadin {
+    optimizeBundle = false
+    productionMode = false
 }
 
 tasks.bootJar {

@@ -124,14 +124,20 @@ class LoadTestService(
         return loadTest.toLoadTestOutputDto(grafanaBaseUrl = grafanaProperties.baseUrl)
     }
 
-    fun getAllLoadTests(): List<LoadTestOutputDto> {
+    fun searchLoadTests(): List<LoadTestOutputDto> {
         return loadTestDbService
-            .getAllLoadTests()
+            .searchLoadTests()
+            .map { getLoadTestStatus(it.id!!) }
+    }
+
+    fun searchLoadTests(nameFilter: String = "", status: LoadTestStatus?): List<LoadTestOutputDto> {
+        return loadTestDbService
+            .searchLoadTests(nameFilter, status)
             .map { getLoadTestStatus(it.id!!) }
     }
 
     fun getAllRunningLoadTests(): List<LoadTestOutputDto> {
-        return getAllLoadTests().filter { it.status == LoadTestStatus.RUNNING }
+        return searchLoadTests().filter { it.status == LoadTestStatus.RUNNING }
     }
 
     /**
