@@ -16,6 +16,7 @@ import edikgoose.loadgenerator.service.ScenarioService
 import edikgoose.loadgenerator.ui.MainLayout
 import edikgoose.loadgenerator.ui.loadtest.view.LoadTestView
 import edikgoose.loadgenerator.ui.scenario.event.ScenarioCloseEvent
+import edikgoose.loadgenerator.ui.scenario.event.ScenarioCreateEvent
 import edikgoose.loadgenerator.ui.scenario.event.ScenarioStartEvent
 import edikgoose.loadgenerator.ui.scenario.form.ScenarioForm
 
@@ -29,7 +30,7 @@ class ScenarioView(
         ScenarioOutputDto::class.java,
     )
     private val filterTextField: TextField = TextField()
-    private lateinit var scenarioForm: ScenarioForm
+    private val scenarioForm: ScenarioForm = ScenarioForm()
 
     init {
         addClassName("table-view")
@@ -51,12 +52,12 @@ class ScenarioView(
     }
 
     private fun configureForm() {
-        scenarioForm = ScenarioForm()
-            .apply {
-                width = "25em"
-                addStartListener(this@ScenarioView::startLoadTestByScenario)
-                addCloseListener(this@ScenarioView::closeForm)
-            }
+        with(scenarioForm) {
+            width = "25em"
+            addCreateListener(this@ScenarioView::createScenario)
+            addStartListener(this@ScenarioView::startLoadTestByScenario)
+            addCloseListener(this@ScenarioView::closeForm)
+        }
         closeForm()
     }
 
@@ -68,7 +69,7 @@ class ScenarioView(
                 valueChangeMode = ValueChangeMode.EAGER
                 addValueChangeListener { updateList() }
             },
-            Button("Add"),
+            Button("Add").apply { addClickListener { openFormForCreation() } },
         ).apply {
             alignItems = FlexComponent.Alignment.END
         }
@@ -81,7 +82,13 @@ class ScenarioView(
             setColumns()
             addColumn({ it.id }).setHeader("ID")
             addColumn({ it.name }).setHeader("Name")
-            addColumn({ "${it.yandexTankConfig.take(20)}..." }).setHeader("Yandex tank config")
+            addColumn({
+                if (it.yandexTankConfig.length > 20) {
+                    "${it.yandexTankConfig.take(20)}..."
+                } else {
+                    it.yandexTankConfig
+                }
+            }).setHeader("Yandex tank config")
             addColumn({ it.ammoId.toString() }).setHeader("Ammo id")
             addColumn({ it.createdDate.toUiFormat() }).setHeader("Created date")
             addColumn({ it.systemConfigurationDto?.id.toString() }).setHeader("System configuration ID")
@@ -96,6 +103,16 @@ class ScenarioView(
         if (dto != null) {
             openForm(dto)
         }
+    }
+
+    private fun createScenario(event: ScenarioCreateEvent) {
+        val outputDto = scenarioService.createScenario(
+            name = event.name,
+            systemConfigurationId = event.systemConfigId,
+            config = event.scenarioConfig
+        )
+        updateList()
+        openForm(outputDto)
     }
 
     private fun startLoadTestByScenario(event: ScenarioStartEvent) {
@@ -116,7 +133,15 @@ class ScenarioView(
     }
 
     private fun openForm(scenarioOutputDto: ScenarioOutputDto) {
+        scenarioForm.isForCreation = false
         scenarioForm.setScenario(scenarioOutputDto)
+        scenarioForm.isVisible = true
+        addClassName("editing")
+    }
+
+    private fun openFormForCreation() {
+        scenarioForm.isForCreation = true
+        scenarioForm.setScenario(null)
         scenarioForm.isVisible = true
         addClassName("editing")
     }

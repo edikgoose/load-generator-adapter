@@ -59,26 +59,23 @@ class LoadTestService(
             )
         )
 
-        logger.info("Config for Yandex tank:\n${scenario.yandexTankConfig}")
+        val preparedConfig = yandexTankTestConfigService.substitutePrefixMeasurement(
+            scenario.yandexTankConfig!!,
+            loadTest.id!!.toString()
+        )
+
+        logger.info("Config for Yandex tank:\n${preparedConfig}")
 
         val yandexTankTestRunOutputDto =
             if (scenario.ammo != null) { // если указан файл для патрон, значит запустить тест мы должны через break stage
                 loadTest.status = LoadTestStatus.LOCKED
                 yandexTankApiFeignClient.runLoadTest(
-                    yandexTankTestConfigService.substitutePrefixMeasurement(
-                        scenario.yandexTankConfig!!,
-                        loadTest.id!!.toString()
-                    ),
+                    preparedConfig,
                     breakStage = "init"
                 )
             } else {
                 loadTest.status = LoadTestStatus.CREATED
-                yandexTankApiFeignClient.runLoadTest(
-                    yandexTankTestConfigService.substitutePrefixMeasurement(
-                        scenario.yandexTankConfig!!,
-                        loadTest.id!!.toString()
-                    )
-                )
+                yandexTankApiFeignClient.runLoadTest(preparedConfig)
             }
 
         loadTest.externalId = yandexTankTestRunOutputDto.session
@@ -200,6 +197,7 @@ class LoadTestService(
         "running" -> LoadTestStatus.RUNNING
         "failed" -> LoadTestStatus.FAILED
         "success" -> LoadTestStatus.FINISHED
+        "starting" -> LoadTestStatus.STARTING
         else -> {
             logger.error("Unexpected test status: $this")
             LoadTestStatus.FAILED

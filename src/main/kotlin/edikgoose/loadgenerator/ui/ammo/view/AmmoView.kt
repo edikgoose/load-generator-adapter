@@ -77,7 +77,13 @@ class AmmoView(
             setColumns()
             addColumn({ it.id }).setHeader("ID")
             addColumn({ it.name }).setHeader("Name")
-            addColumn({ it.ammo }).setHeader("Ammo")
+            addColumn({
+                if (it.ammo.length > 20) {
+                    "${it.ammo.take(20)}..."
+                } else {
+                    it.ammo
+                }
+            }).setHeader("Ammo")
             addColumn({ it.createdDate.toUiFormat() }).setHeader("Created date")
 
             columns.forEach { it.setAutoWidth(true) }

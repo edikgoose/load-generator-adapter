@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query
 interface ScenarioRepository: JpaRepository<Scenario, Long> {
     @Query("""
         SELECT sc from Scenario sc
-        WHERE sc.name like lower(concat('%', :nameFilter, '%'))
+        WHERE LOWER(sc.name) like lower(concat('%', LOWER(:nameFilter), '%'))
     """)
     fun searchScenarios(nameFilter: String): List<Scenario>
 }

@@ -104,7 +104,13 @@ class LoadTestView(
             addColumn({ it.status }).setHeader("Status")
             addColumn({ it.stage ?: LoadTestStage.UNKNOWN }).setHeader("Stage")
             addColumn({ it.scenario.id }).setHeader("Scenario ID")
-            addColumn({ "${it.scenario.name.take(20)}..." }).setHeader("Scenario name")
+            addColumn({
+                if (it.scenario.name.length > 20) {
+                    "${it.scenario.name.take(20)}..."
+                } else {
+                    it.scenario.name
+                }
+            }).setHeader("Scenario name")
             addColumn({ it.startDate.toUiFormat() }).setHeader("Start date")
             addColumn({ it.finishDate?.toUiFormat() ?: "" }).setHeader("Finish date")
             addColumn(

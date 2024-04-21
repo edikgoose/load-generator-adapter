@@ -6,5 +6,6 @@ enum class LoadTestStatus {
     RUNNING,
     STOPPED,
     FAILED,
-    FINISHED
+    FINISHED,
+    STARTING
 }

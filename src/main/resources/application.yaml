@@ -41,7 +41,9 @@ poller:
 load-generator-engine:
   yandex-tank:
     base-url: ${YANDEX_TANK_BASE_URL:http://tank-server:8888}
-
+  influx:
+    address: ${INFLUX_BASE_ADDRESS:influx}
+    port: ${INFLUX_BASE_PORT:8086}
   grafana:
     base-url: ${GRAFANA_BASE_URL:http://grafana:3000}
 

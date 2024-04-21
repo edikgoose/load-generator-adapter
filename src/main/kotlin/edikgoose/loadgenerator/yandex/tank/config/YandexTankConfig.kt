@@ -18,6 +18,7 @@ data class TelegrafConfig(
 data class InfluxConfig(
     var enabled: Boolean? = null,
     var address: String? = null,
+    var port: String? = null,
     var database: String? = null,
     var tankTag: String? = null,
     var prefixMeasurement: String? = null

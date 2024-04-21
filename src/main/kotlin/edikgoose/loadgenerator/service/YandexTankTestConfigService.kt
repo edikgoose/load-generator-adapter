@@ -2,8 +2,8 @@ package edikgoose.loadgenerator.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SNAKE_CASE
+import edikgoose.loadgenerator.configuration.InfluxProperties
 import edikgoose.loadgenerator.yandex.tank.config.YandexTankConfig
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.yaml.snakeyaml.Yaml
 import jakarta.annotation.PostConstruct
@@ -13,7 +13,8 @@ import jakarta.annotation.PostConstruct
  */
 @Service
 class YandexTankTestConfigService(
-    @Autowired private val objectMapper: ObjectMapper
+    private val objectMapper: ObjectMapper,
+    private val influxProperties: InfluxProperties
 ) {
     private val yaml = Yaml()
 
@@ -34,8 +35,12 @@ class YandexTankTestConfigService(
         val config = configAsString.getConfigAsMap()
 
         // Modify the value of prefix_measurement
-        val influxConfig = (config["influx"] as? Map<*, *>)?.toMutableMap()
-        influxConfig?.set("prefix_measurement", "${newPrefix}_")
+        val influxConfig = mutableMapOf<String, Any>()
+        influxConfig["enabled"] = true
+        influxConfig["database"] = "metrics"
+        influxConfig["prefix_measurement"] = "${newPrefix}_"
+        influxConfig["address"] = influxProperties.address
+        influxConfig["port"] = influxProperties.port.toInt()
 
         config["influx"] = influxConfig ?: emptyMap<Any, Any>()
 

@@ -9,7 +9,7 @@ interface AmmoRepository: JpaRepository<Ammo, Long> {
 
     @Query("""
         SELECT am from Ammo am
-        WHERE am.name like lower(concat('%', :nameFilter, '%'))
+        WHERE LOWER(am.name) like lower(concat('%', LOWER(:nameFilter), '%'))
     """)
     fun searchAmmo(nameFilter: String): List<Ammo>
 

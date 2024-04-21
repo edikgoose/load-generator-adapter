@@ -12,14 +12,14 @@ class ScenarioStartEvent(
     source: ScenarioForm,
     val scenarioOutputDto: ScenarioOutputDto,
     val loadTestName: String
-) :
-    ScenarioEvent(source)
+) : ScenarioEvent(source)
 
 class ScenarioCreateEvent(
     source: ScenarioForm,
-    val scenarioOutputDto: ScenarioOutputDto,
-    val loadTestName: String
-) :
-    ScenarioEvent(source)
+    val name: String,
+    val scenarioConfig: String,
+    val ammoId: Long?,
+    val systemConfigId: Long?,
+) : ScenarioEvent(source)
 
 class ScenarioCloseEvent(source: ScenarioForm) : ScenarioEvent(source)

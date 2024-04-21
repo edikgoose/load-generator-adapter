@@ -24,7 +24,7 @@ interface LoadTestRepository: JpaRepository<LoadTest, Long> {
 
     @Query("""
         SELECT ld from LoadTest ld
-        WHERE ld.name like lower(concat('%', :nameFilter, '%'))
+        WHERE LOWER(ld.name) like lower(concat('%', LOWER(:nameFilter), '%'))
         AND (COALESCE (:loadTestStatus, null) IS null OR ld.status = :loadTestStatus)
     """)
     fun searchLoadTests(nameFilter: String, loadTestStatus: LoadTestStatus?): List<LoadTest>

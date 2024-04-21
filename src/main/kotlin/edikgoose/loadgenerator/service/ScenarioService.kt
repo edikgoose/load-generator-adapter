@@ -20,10 +20,10 @@ class ScenarioService(
     @Autowired val yandexTankTestConfigService: YandexTankTestConfigService,
     @Autowired val systemConfigurationRepository: SystemConfigurationRepository
 ) {
-    fun createScenario(name: String, systemConfigurationId: Long, config: String): ScenarioOutputDto {
+    fun createScenario(name: String, systemConfigurationId: Long?, config: String): ScenarioOutputDto {
         val yandexTankConfig = yandexTankTestConfigService.parseYamlConfig(config)
 
-        val systemConfiguration: SystemConfiguration? = systemConfigurationRepository.findById(systemConfigurationId).orElse(null)
+        val systemConfiguration: SystemConfiguration? = systemConfigurationRepository.findById(systemConfigurationId ?: -1).orElse(null)
 
         val scenario = Scenario(
             id = null,
