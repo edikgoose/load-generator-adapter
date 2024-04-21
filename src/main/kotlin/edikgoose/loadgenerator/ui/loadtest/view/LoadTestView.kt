@@ -1,4 +1,4 @@
-package edikgoose.loadgenerator.ui.views
+package edikgoose.loadgenerator.ui.loadtest.view
 
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
@@ -17,9 +17,10 @@ import edikgoose.loadgenerator.enumeration.LoadTestStage
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
 import edikgoose.loadgenerator.service.LoadTestService
 import edikgoose.loadgenerator.service.ScenarioService
-import edikgoose.loadgenerator.ui.event.CloseEvent
-import edikgoose.loadgenerator.ui.event.StopEvent
-import edikgoose.loadgenerator.ui.form.LoadTestForm
+import edikgoose.loadgenerator.ui.MainLayout
+import edikgoose.loadgenerator.ui.loadtest.event.LoadTestCloseEvent
+import edikgoose.loadgenerator.ui.loadtest.event.LoadTestStopEvent
+import edikgoose.loadgenerator.ui.loadtest.form.LoadTestForm
 
 
 @Route("", layout = MainLayout::class)
@@ -46,6 +47,12 @@ class LoadTestView(
         setSizeFull()
         add(getToolBar(), getContent())
         updateList()
+        ui.ifPresent {
+            it.pollInterval = 3000
+            it.addPollListener {
+                ui.ifPresent { updateList() }
+            }
+        }
     }
 
     private fun getContent(): Component {
@@ -107,7 +114,7 @@ class LoadTestView(
                     }
             ).setHeader("Dashboard")
             columns.forEach { it.setAutoWidth(true) }
-
+            ui.ifPresent { it.pollInterval = 3000; it.addPollListener { updateList() } }
             asSingleSelect().addValueChangeListener { editLoadTest(it.value) }
         }
     }
@@ -118,7 +125,7 @@ class LoadTestView(
         }
     }
 
-    private fun stopLoadTest(event: StopEvent) {
+    private fun stopLoadTest(event: LoadTestStopEvent) {
         loadTestService.stopLoadTest(event.loadTestOutputDto.id)
         updateList()
         closeForm()
@@ -128,7 +135,7 @@ class LoadTestView(
         grid.setItems(loadTestService.searchLoadTests(filterTextField.value, statusSelect.value))
     }
 
-    private fun closeForm(event: CloseEvent? = null) {
+    private fun closeForm(event: LoadTestCloseEvent? = null) {
         loadTestForm.setLoadTest(null)
         loadTestForm.isVisible = false
         removeClassName("editing")

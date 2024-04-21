@@ -1,4 +1,4 @@
-package edikgoose.loadgenerator.ui.form
+package edikgoose.loadgenerator.ui.loadtest.form
 
 import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.ComponentEventListener
@@ -14,8 +14,8 @@ import com.vaadin.flow.shared.Registration
 import edikgoose.loadgenerator.dto.LoadTestOutputDto
 import edikgoose.loadgenerator.dto.ScenarioOutputDto
 import edikgoose.loadgenerator.dto.toUiFormat
-import edikgoose.loadgenerator.ui.event.CloseEvent
-import edikgoose.loadgenerator.ui.event.StopEvent
+import edikgoose.loadgenerator.ui.loadtest.event.LoadTestCloseEvent
+import edikgoose.loadgenerator.ui.loadtest.event.LoadTestStopEvent
 
 
 class LoadTestForm(
@@ -75,11 +75,11 @@ class LoadTestForm(
         close.addThemeVariants(ButtonVariant.LUMO_TERTIARY)
         close.addClickShortcut(Key.ESCAPE)
 
-        stop.addClickListener { fireEvent(StopEvent(this, binder.bean)) }
+        stop.addClickListener { fireEvent(LoadTestStopEvent(this, binder.bean)) }
 
         close.addClickListener { _: ClickEvent<Button> ->
             fireEvent(
-                CloseEvent(this)
+                LoadTestCloseEvent(this)
             )
         }
 
@@ -91,11 +91,11 @@ class LoadTestForm(
         binder.bean = loadTestOutputDto
     }
 
-    fun addStopListener(listener: ComponentEventListener<StopEvent>): Registration {
-        return addListener(StopEvent::class.java, listener)
+    fun addStopListener(listener: ComponentEventListener<LoadTestStopEvent>): Registration {
+        return addListener(LoadTestStopEvent::class.java, listener)
     }
 
-    fun addCloseListener(listener: ComponentEventListener<CloseEvent>): Registration {
-        return addListener(CloseEvent::class.java, listener)
+    fun addCloseListener(listener: ComponentEventListener<LoadTestCloseEvent>): Registration {
+        return addListener(LoadTestCloseEvent::class.java, listener)
     }
 }

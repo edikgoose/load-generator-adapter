@@ -1,7 +1,7 @@
 package edikgoose.loadgenerator.service
 
 import edikgoose.loadgenerator.configuration.ConsulProperties
-import edikgoose.loadgenerator.exception.ConsulKeyValueNotFoundException
+import edikgoose.loadgenerator.log
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
@@ -53,7 +53,7 @@ class ConsulKvService(
             } else if (httpResponse.statusCode.is4xxClientError) {
                 //Handle CLIENT_ERROR
                 if (httpResponse.getStatusCode() === HttpStatus.NOT_FOUND) {
-                    throw ConsulKeyValueNotFoundException()
+                    log.error("Key is not found in consul: ${String(httpResponse.body.readAllBytes())}")
                 }
             }
         }

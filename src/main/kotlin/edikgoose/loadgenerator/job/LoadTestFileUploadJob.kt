@@ -1,5 +1,6 @@
 package edikgoose.loadgenerator.job
 
+import edikgoose.loadgenerator.configuration.ConsulProperties
 import edikgoose.loadgenerator.entity.LoadTest
 import edikgoose.loadgenerator.enumeration.LoadTestStatus
 import edikgoose.loadgenerator.exception.SessionNotFoundException
@@ -8,15 +9,15 @@ import edikgoose.loadgenerator.service.LoadTestService
 import edikgoose.loadgenerator.service.SystemConfigurationService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
 @Service
 class LoadTestFileUploadJob(
-    @Autowired private val loadTestRepository: LoadTestRepository,
-    @Autowired private val loadTestService: LoadTestService,
-    @Autowired private val systemConfigurationService: SystemConfigurationService
+    private val loadTestRepository: LoadTestRepository,
+    private val loadTestService: LoadTestService,
+    private val systemConfigurationService: SystemConfigurationService,
+    private val consulProperties: ConsulProperties
 ) {
     val logger: Logger = LoggerFactory.getLogger(LoadTestFileUploadJob::class.java)
 
@@ -30,6 +31,10 @@ class LoadTestFileUploadJob(
 
     @Scheduled(fixedDelay = 3000)
     fun actualizeStatus() {
+        if (!consulProperties.consulEnabled) {
+            return
+        }
+
         val loadTests: List<LoadTest> =
             loadTestRepository.findByStatuses(listOf(LoadTestStatus.RUNNING, LoadTestStatus.CREATED))
         if (loadTests.isNotEmpty()) {

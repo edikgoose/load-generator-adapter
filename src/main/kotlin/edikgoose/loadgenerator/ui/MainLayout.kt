@@ -1,4 +1,4 @@
-package edikgoose.loadgenerator.ui.views
+package edikgoose.loadgenerator.ui
 
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.applayout.DrawerToggle
@@ -8,6 +8,9 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.RouterLink
 import com.vaadin.flow.theme.lumo.LumoUtility
+import edikgoose.loadgenerator.ui.ammo.view.AmmoView
+import edikgoose.loadgenerator.ui.loadtest.view.LoadTestView
+import edikgoose.loadgenerator.ui.scenario.view.ScenarioView
 
 
 class MainLayout: AppLayout() {
@@ -35,7 +38,9 @@ class MainLayout: AppLayout() {
     private fun createDrawer() {
         addToDrawer(
             VerticalLayout(
-                RouterLink("Load Tests", LoadTestView::class.java)
+                RouterLink("Load Tests", LoadTestView::class.java),
+                RouterLink("Scenarios", ScenarioView::class.java),
+                RouterLink("Ammo", AmmoView::class.java),
             )
         )
     }

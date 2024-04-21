@@ -68,4 +68,10 @@ class ScenarioService(
     }
 
     fun getAllScenarios(): List<ScenarioOutputDto> = scenarioRepository.findAll().map { it.toScenarioOutputDto() }
+
+    fun searchScenarios(nameFilter: String = ""): List<ScenarioOutputDto> {
+        return scenarioRepository
+            .searchScenarios(nameFilter)
+            .map { it.toScenarioOutputDto() }
+    }
 }

@@ -33,6 +33,10 @@ spring:
 
 consul:
   url: ${CONSUL_URL:http://consul:8500}
+  enabled: ${CONSUL_ENABLED:true}
+
+poller:
+  delay: 3000
 
 load-generator-engine:
   yandex-tank:

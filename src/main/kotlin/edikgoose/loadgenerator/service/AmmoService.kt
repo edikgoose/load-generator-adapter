@@ -50,6 +50,12 @@ class AmmoService(
 
     fun getAllAmmo(): List<AmmoOutputDto> = ammoRepository.findAll().map { it.toAmmoOutputDto() }
 
+    fun searchAmmo(nameFilter: String = ""): List<AmmoOutputDto> {
+        return ammoRepository
+            .searchAmmo(nameFilter)
+            .map { it.toAmmoOutputDto() }
+    }
+
     companion object {
         const val AMMO_NAME_CONSTRAINT_NAME = "ammo_name_idx"
     }

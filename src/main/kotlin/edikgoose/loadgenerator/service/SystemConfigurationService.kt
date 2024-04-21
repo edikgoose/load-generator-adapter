@@ -1,5 +1,6 @@
 package edikgoose.loadgenerator.service
 
+import edikgoose.loadgenerator.configuration.ConsulProperties
 import edikgoose.loadgenerator.converter.toDto
 import edikgoose.loadgenerator.dto.SystemConfigurationDto
 import edikgoose.loadgenerator.entity.LoadTest
@@ -21,7 +22,8 @@ class SystemConfigurationService(
     private val systemConfigurationRepository: SystemConfigurationRepository,
     private val loadTestRepository: LoadTestRepository,
     private val consulKvService: ConsulKvService,
-    private val transactionTemplate: TransactionTemplate
+    private val transactionTemplate: TransactionTemplate,
+    private val consulProperties: ConsulProperties
 ) {
     val logger: Logger = LoggerFactory.getLogger(SystemConfigurationService::class.java)
 
@@ -63,6 +65,10 @@ class SystemConfigurationService(
     }
 
     fun pollConfiguration(loadTestId: Long) {
+        if (!consulProperties.consulEnabled) {
+            return
+        }
+
         val systemConfiguration: SystemConfiguration = loadTestRepository.findConfigurationOfLoadTestById(loadTestId) ?:
             throw NotFoundException(loadTestId, LoadTest::class.java)
 

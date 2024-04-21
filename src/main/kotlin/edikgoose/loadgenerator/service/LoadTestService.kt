@@ -12,6 +12,7 @@ import edikgoose.loadgenerator.exception.NotFoundException
 import edikgoose.loadgenerator.exception.SessionAlreadyStoppedException
 import edikgoose.loadgenerator.exception.YandexTankException
 import edikgoose.loadgenerator.feign.YandexTankApiFeignClient
+import edikgoose.loadgenerator.log
 import edikgoose.loadgenerator.repository.ScenarioRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -86,7 +87,11 @@ class LoadTestService(
         logger.info("Load test has successfully started. External id: ${loadTest.externalId}")
 
         if (loadTest.scenario.systemConfiguration?.type == SystemConfigurationType.CONSUL) {
-            systemConfigurationService.pollConfiguration(loadTestId = loadTest.id!!)
+            try {
+                systemConfigurationService.pollConfiguration(loadTestId = loadTest.id!!)
+            } catch (e: Exception) {
+                log.error("Error during pulling consul config: ", e)
+            }
         }
 
         return loadTest.toLoadTestOutputDto(grafanaBaseUrl = grafanaProperties.baseUrl)

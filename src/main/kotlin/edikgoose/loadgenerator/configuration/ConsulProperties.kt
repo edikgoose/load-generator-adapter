@@ -7,4 +7,5 @@ import org.springframework.context.annotation.Configuration
 @ConfigurationProperties("consul")
 class ConsulProperties {
     var url: String = ""
+    var consulEnabled: Boolean = false
 }

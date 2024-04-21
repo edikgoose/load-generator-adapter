@@ -4,9 +4,9 @@ import java.time.Instant
 
 data class ScenarioOutputDto (
     val id: Long,
-    val name: String,
-    val yandexTankConfig: String,
+    var name: String,
+    var yandexTankConfig: String,
     val createdDate: Instant,
-    val ammoId: Long?,
-    val systemConfigurationDto: SystemConfigurationDto?,
+    var ammoId: Long?,
+    var systemConfigurationDto: SystemConfigurationDto?,
 )
