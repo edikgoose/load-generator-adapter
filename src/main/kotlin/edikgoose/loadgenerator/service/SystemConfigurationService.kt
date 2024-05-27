@@ -2,6 +2,8 @@ package edikgoose.loadgenerator.service
 
 import edikgoose.loadgenerator.configuration.ConsulProperties
 import edikgoose.loadgenerator.converter.toDto
+import edikgoose.loadgenerator.converter.toScenarioOutputDto
+import edikgoose.loadgenerator.dto.ScenarioOutputDto
 import edikgoose.loadgenerator.dto.SystemConfigurationDto
 import edikgoose.loadgenerator.entity.LoadTest
 import edikgoose.loadgenerator.entity.SystemConfiguration
@@ -15,6 +17,7 @@ import edikgoose.loadgenerator.repository.SystemConfigurationRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
 
 @Service
@@ -31,7 +34,8 @@ class SystemConfigurationService(
         val systemConfiguration = SystemConfiguration(
             name = name,
             type = SystemConfigurationType.TEXT,
-            configuration = config,
+            initialConfiguration = config,
+            currentConfiguration = null,
             consulKey = null,
             createdDate = null
         )
@@ -57,7 +61,8 @@ class SystemConfigurationService(
         val systemConfiguration = SystemConfiguration(
             name = name,
             type = SystemConfigurationType.CONSUL,
-            configuration = configurationFromConsul ?: config,
+            initialConfiguration = configurationFromConsul ?: config,
+            currentConfiguration = configurationFromConsul,
             consulKey = consulKey,
             createdDate = null
         )
@@ -69,13 +74,16 @@ class SystemConfigurationService(
             return
         }
 
-        val systemConfiguration: SystemConfiguration = loadTestRepository.findConfigurationOfLoadTestById(loadTestId) ?:
-            throw NotFoundException(loadTestId, LoadTest::class.java)
+        val systemConfiguration: SystemConfiguration =
+            loadTestRepository.findConfigurationOfLoadTestById(loadTestId) ?: throw NotFoundException(
+                loadTestId,
+                LoadTest::class.java
+            )
 
         if (systemConfiguration.type == SystemConfigurationType.CONSUL) {
             logger.info("Start polling consul config for load test $loadTestId")
             val configurationFromConsul = consulKvService.getValue(systemConfiguration.consulKey!!)
-            systemConfiguration.configuration = configurationFromConsul
+            systemConfiguration.currentConfiguration = configurationFromConsul
             systemConfigurationRepository.save(systemConfiguration)
         }
     }
@@ -91,7 +99,7 @@ class SystemConfigurationService(
             val systemConfiguration = systemConfigurationRepository.findById(id).orElse(null)
                 ?: throw NotFoundException(id, SystemConfiguration::class.java)
 
-            systemConfiguration.configuration = config
+            systemConfiguration.initialConfiguration = config
             systemConfigurationRepository.save(systemConfiguration)
 
             systemConfiguration.consulKey
@@ -107,5 +115,40 @@ class SystemConfigurationService(
         }
 
         return systemConfigurationRepository.findById(id).orElseThrow().toDto()
+    }
+
+    @Transactional
+    fun updateCurrentConfig(config: String, id: Long, consulKey: String) {
+        val configEntity = systemConfigurationRepository.findById(id).orElseThrow()
+        setCurrentConfigInConsul(configEntity)
+        configEntity.currentConfiguration = config
+    }
+
+    fun setConfigInConsul(config: SystemConfiguration) {
+        if (config.type == SystemConfigurationType.CONSUL) {
+            try {
+                consulKvService.putValue(config.consulKey!!, config.initialConfiguration!!)
+            } catch (ex: RuntimeException) {
+                logger.error("Error during config put in Consul", ex)
+                throw ConsulErrorException(ex)
+            }
+        }
+    }
+
+    private fun setCurrentConfigInConsul(config: SystemConfiguration) {
+        if (config.type == SystemConfigurationType.CONSUL) {
+            try {
+                consulKvService.putValue(config.consulKey!!, config.currentConfiguration!!)
+            } catch (ex: RuntimeException) {
+                logger.error("Error during config put in Consul", ex)
+                throw ConsulErrorException(ex)
+            }
+        }
+    }
+
+    fun searchScenarios(nameFilter: String = ""): List<SystemConfigurationDto> {
+        return systemConfigurationRepository
+            .searchConfigurations(nameFilter)
+            .map { it.toDto() }
     }
 }

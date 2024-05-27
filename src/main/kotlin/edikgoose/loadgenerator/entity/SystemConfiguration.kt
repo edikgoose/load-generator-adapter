@@ -34,8 +34,11 @@ data class SystemConfiguration (
     @Enumerated(EnumType.STRING)
     var type: SystemConfigurationType?,
 
-    @Column(name = "configuration")
-    var configuration: String?,
+    @Column(name = "initial_configuration")
+    var initialConfiguration: String?,
+
+    @Column(name = "current_configuration")
+    var currentConfiguration: String?,
 
     @Column(name = "consul_key")
     var consulKey: String?,

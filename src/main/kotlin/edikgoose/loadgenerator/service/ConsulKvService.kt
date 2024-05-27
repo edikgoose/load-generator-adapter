@@ -55,6 +55,7 @@ class ConsulKvService(
                 if (httpResponse.getStatusCode() === HttpStatus.NOT_FOUND) {
                     log.error("Key is not found in consul: ${String(httpResponse.body.readAllBytes())}")
                 }
+                throw HttpClientErrorException(httpResponse.statusCode)
             }
         }
     }

@@ -8,7 +8,8 @@ fun SystemConfiguration.toDto() = SystemConfigurationDto(
     id = id!!,
     name = name!!,
     type = type!!,
-    configuration = configuration,
+    configuration = initialConfiguration!!,
+    currentConfiguration = currentConfiguration,
     consulKey = consulKey,
     createdDate = createdDate!!
 )

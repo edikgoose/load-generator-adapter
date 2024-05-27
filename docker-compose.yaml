@@ -8,17 +8,23 @@ services:
   tank-server:
     image: edikgoose/yandex-tank-api:latest
     container_name: tank
-#    network_mode: host
     dns: 8.8.8.8
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       - influx
       - grafana
     ports:
-      - "8888:8888"
+      - "8887:8888"
     volumes:
       - ${PWD}/tests:/var/loadtest
     networks: &network
       - foodapi_network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1Gb
 
   influx:
     image: influxdb:1.8
@@ -58,14 +64,18 @@ services:
       - POSTGRES_PASSWORD=password
     networks: *network
 
-  load-generator-adapter:
-    image: edikgoose/load-generator-adapter:latest
-    container_name: load-generator-adapter
-    environment:
-      TZ: "Europe/Moscow"
-    ports:
-      - "8087:8087"
-    networks: *network
+#  orchestrator:
+#    image: edikgoose/load-generator-adapter:latest
+#    container_name: load-generator-adapter
+#    ports:
+#      - "8087:8087"
+#    networks: *network
+#    environment:
+#      - DB_URL=jdbc:postgresql://postgresql:5432/load_generator_adapter
+#      - DB_USERNAME=postgres
+#      - DB_PASSWORD=password
+#      - CONSUL_URL=http://consul:8500
+#      - YANDEX_TANK_BASE_URL=http://tank-server:8888
 
   consul:
     image: hashicorp/consul:1.18

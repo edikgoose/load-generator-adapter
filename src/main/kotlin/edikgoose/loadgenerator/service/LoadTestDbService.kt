@@ -30,4 +30,7 @@ class LoadTestDbService(
 
     fun searchLoadTests(nameFilter: String, loadTestStatus: LoadTestStatus?): List<LoadTest> =
         loadTestRepository.searchLoadTests(nameFilter, loadTestStatus)
+
+    fun findUnfinishedLoadTests(): List<LoadTest> =
+        loadTestRepository.findByStatuses(listOf(LoadTestStatus.CREATED, LoadTestStatus.RUNNING))
 }

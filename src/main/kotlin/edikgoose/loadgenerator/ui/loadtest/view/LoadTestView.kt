@@ -11,6 +11,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.renderer.LitRenderer
 import com.vaadin.flow.data.value.ValueChangeMode
 import com.vaadin.flow.router.Route
+import com.vaadin.flow.router.RouterLink
 import edikgoose.loadgenerator.dto.LoadTestOutputDto
 import edikgoose.loadgenerator.dto.toUiFormat
 import edikgoose.loadgenerator.enumeration.LoadTestStage
@@ -21,6 +22,7 @@ import edikgoose.loadgenerator.ui.MainLayout
 import edikgoose.loadgenerator.ui.loadtest.event.LoadTestCloseEvent
 import edikgoose.loadgenerator.ui.loadtest.event.LoadTestStopEvent
 import edikgoose.loadgenerator.ui.loadtest.form.LoadTestForm
+import edikgoose.loadgenerator.ui.scenario.view.ScenarioView
 
 
 @Route("", layout = MainLayout::class)
@@ -85,7 +87,6 @@ class LoadTestView(
                 valueChangeMode = ValueChangeMode.EAGER
                 addValueChangeListener { updateList() }
             },
-            Button("Add"),
             statusSelect.apply {
                 addValueChangeListener { updateList() }
             }
@@ -103,7 +104,9 @@ class LoadTestView(
             addColumn({ it.name }).setHeader("Name")
             addColumn({ it.status }).setHeader("Status")
             addColumn({ it.stage ?: LoadTestStage.UNKNOWN }).setHeader("Stage")
-            addColumn({ it.scenario.id }).setHeader("Scenario ID")
+            addComponentColumn { it: LoadTestOutputDto ->
+                RouterLink(it.id.toString(), ScenarioView::class.java)
+            }.setHeader("Scenario ID")
             addColumn({
                 if (it.scenario.name.length > 20) {
                     "${it.scenario.name.take(20)}..."

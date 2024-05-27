@@ -11,6 +11,7 @@ import com.vaadin.flow.theme.lumo.LumoUtility
 import edikgoose.loadgenerator.ui.ammo.view.AmmoView
 import edikgoose.loadgenerator.ui.loadtest.view.LoadTestView
 import edikgoose.loadgenerator.ui.scenario.view.ScenarioView
+import edikgoose.loadgenerator.ui.systemconfiguration.view.SystemConfigurationView
 
 
 class MainLayout: AppLayout() {
@@ -41,6 +42,7 @@ class MainLayout: AppLayout() {
                 RouterLink("Load Tests", LoadTestView::class.java),
                 RouterLink("Scenarios", ScenarioView::class.java),
                 RouterLink("Ammo", AmmoView::class.java),
+                RouterLink("System configuration", SystemConfigurationView::class.java),
             )
         )
     }

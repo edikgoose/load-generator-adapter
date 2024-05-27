@@ -85,6 +85,7 @@ class LoadTestService(
 
         if (loadTest.scenario.systemConfiguration?.type == SystemConfigurationType.CONSUL) {
             try {
+                systemConfigurationService.setConfigInConsul(loadTest.scenario.systemConfiguration!!)
                 systemConfigurationService.pollConfiguration(loadTestId = loadTest.id!!)
             } catch (e: Exception) {
                 log.error("Error during pulling consul config: ", e)

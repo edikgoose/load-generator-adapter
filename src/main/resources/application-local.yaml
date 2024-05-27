@@ -30,7 +30,7 @@ consul:
 
 load-generator-engine:
   yandex-tank:
-    base-url: http://localhost:8888
+    base-url: http://localhost:8887
 
   grafana:
     base-url: http://localhost:3001

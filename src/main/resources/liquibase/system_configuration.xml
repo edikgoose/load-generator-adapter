@@ -27,7 +27,8 @@
             <column name="type" type="text" remarks="System configuration type">
                 <constraints nullable="false"/>
             </column>
-            <column name="configuration" type="TEXT" remarks="System configuration"/>
+            <column name="initial_configuration" type="TEXT" remarks="Initial system configuration"/>
+            <column name="current_configuration" type="TEXT" remarks="Current system configuration"/>
             <column name="consul_key" type="TEXT" remarks="Key for KV store of Consul"/>
             <column name="created_date" defaultValueComputed="CURRENT_TIMESTAMP" type="TIMESTAMP WITHOUT TIME ZONE"
                     remarks="Creation date of system configuration">
