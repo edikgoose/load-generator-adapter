@@ -19,7 +19,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 2,
-  "id": 15,
+  "id": 1,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -1501,7 +1501,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1900,7 +1901,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "always",
             "spanNulls": true,
             "stacking": {
               "group": "A",
@@ -1915,7 +1916,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1953,6 +1955,10 @@
                   "fixedColor": "dark-purple",
                   "mode": "fixed"
                 }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 50
               }
             ]
           },
@@ -1968,6 +1974,10 @@
                   "fixedColor": "dark-green",
                   "mode": "fixed"
                 }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 50
               }
             ]
           },
@@ -1983,6 +1993,10 @@
                   "fixedColor": "light-orange",
                   "mode": "fixed"
                 }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 50
               }
             ]
           },
@@ -1998,6 +2012,10 @@
                   "fixedColor": "semi-dark-orange",
                   "mode": "fixed"
                 }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
               }
             ]
           },
@@ -2028,6 +2046,10 @@
                   "fixedColor": "semi-dark-red",
                   "mode": "fixed"
                 }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 50
               }
             ]
           },
@@ -2102,6 +2124,48 @@
                 "value": 0
               }
             ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "http_429"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "mode": "fixed"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 50
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "http_500"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
@@ -2150,7 +2214,7 @@
           "measurement": "1_proto_codes",
           "orderByTime": "ASC",
           "policy": "default",
-          "query": "SELECT mean(\"200\") AS \"http_200\", mean(\"404\") AS \"http_404\", mean(\"500\") AS \"http_500\", mean(\"504\") AS \"http_504\", mean(\"301\") AS \"http_301\", mean(\"302\") AS \"http_302\", mean(\"0\") AS \"Unknown status\" FROM \"${test_id}_proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
+          "query": "SELECT mean(\"200\") AS \"http_200\", mean(\"404\") AS \"http_404\", mean(\"500\") AS \"http_500\", mean(\"429\") AS \"http_429\", mean(\"504\") AS \"http_504\", mean(\"301\") AS \"http_301\", mean(\"302\") AS \"http_302\", mean(\"0\") AS \"Unknown status\" FROM \"${test_id}_proto_codes\" WHERE $timeFilter GROUP BY time($__interval) fill(null)",
           "rawQuery": true,
           "refId": "A",
           "resultFormat": "time_series",
@@ -2382,7 +2446,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "1s",
+  "refresh": false,
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],
@@ -2390,9 +2454,9 @@
     "list": [
       {
         "current": {
-          "selected": true,
-          "text": "99",
-          "value": "99"
+          "selected": false,
+          "text": "75",
+          "value": "75"
         },
         "hide": 0,
         "includeAll": false,
@@ -2405,7 +2469,7 @@
             "value": "100"
           },
           {
-            "selected": true,
+            "selected": false,
             "text": "99",
             "value": "99"
           },
@@ -2430,7 +2494,7 @@
             "value": "80"
           },
           {
-            "selected": false,
+            "selected": true,
             "text": "75",
             "value": "75"
           },
@@ -2447,9 +2511,9 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": "1",
-          "value": "1"
+          "selected": false,
+          "text": "202",
+          "value": "202"
         },
         "description": "ID of the load test",
         "hide": 0,
@@ -2458,7 +2522,7 @@
         "name": "test_id",
         "options": [
           {
-            "selected": true,
+            "selected": false,
             "text": "1",
             "value": "1"
           }
@@ -2471,8 +2535,8 @@
     ]
   },
   "time": {
-    "from": "now-15m",
-    "to": "now"
+    "from": "2024-05-27T18:02:32.988Z",
+    "to": "2024-05-27T18:07:10.000Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -2494,6 +2558,6 @@
   "timezone": "",
   "title": "Results of load tests",
   "uid": "yandex-tank",
-  "version": 23,
+  "version": 1,
   "weekStart": ""
 }

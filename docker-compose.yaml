@@ -64,18 +64,18 @@ services:
       - POSTGRES_PASSWORD=password
     networks: *network
 
-#  orchestrator:
-#    image: edikgoose/load-generator-adapter:latest
-#    container_name: load-generator-adapter
-#    ports:
-#      - "8087:8087"
-#    networks: *network
-#    environment:
-#      - DB_URL=jdbc:postgresql://postgresql:5432/load_generator_adapter
-#      - DB_USERNAME=postgres
-#      - DB_PASSWORD=password
-#      - CONSUL_URL=http://consul:8500
-#      - YANDEX_TANK_BASE_URL=http://tank-server:8888
+  orchestrator:
+    image: edikgoose/load-generator-adapter:latest
+    container_name: load-generator-adapter
+    ports:
+      - "8087:8087"
+    networks: *network
+    environment:
+      - DB_URL=jdbc:postgresql://postgresql:5432/load_generator_adapter
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=password
+      - CONSUL_URL=http://consul:8500
+      - YANDEX_TANK_BASE_URL=http://tank-server:8888
 
   consul:
     image: hashicorp/consul:1.18

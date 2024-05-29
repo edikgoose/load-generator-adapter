@@ -8,6 +8,12 @@ To run server on local machine it is recommended to use [docker compose](docker-
 docker-compose up
 ```
 
+To build new docker image of load-generator-adapter:
+```Bash
+gradle -DproductionMode=true vaadinBuildFrontend build
+docker build --tag edikgoose/load-generator-adapter:latest .
+```
+
 Services:
 1. **Yandex tank core**
    
