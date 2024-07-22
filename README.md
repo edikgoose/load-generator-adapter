@@ -10,7 +10,7 @@ docker-compose up
 
 To build new docker image of load-generator-adapter:
 ```Bash
-gradle -DproductionMode=true vaadinBuildFrontend build
+./gradlew -DproductionMode=true vaadinBuildFrontend build
 docker build --tag edikgoose/load-generator-adapter:latest .
 ```
 

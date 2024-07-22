@@ -46,23 +46,20 @@ class SystemConfigurationService(
         var configurationFromConsul: String? = null
         try {
             configurationFromConsul = consulKvService.getValue(consulKey)
-        } catch (ex: ConsulKeyValueNotFoundException) {
+        } catch (ex: RuntimeException) {
             logger.info("Consul KV does not have such key $consulKey. Will be created")
             consulKvService.putValue(
                 consulKey,
                 config ?: throw ConsulKeyValueNotFoundAndConfigNotPutException(key = consulKey)
             )
-        } catch (ex: RuntimeException) {
-            logger.error("Error during config resulution in consul: ", ex)
-            throw ConsulErrorException(ex)
         }
 
         // Сохранить конфиг в поле сonfig
         val systemConfiguration = SystemConfiguration(
             name = name,
             type = SystemConfigurationType.CONSUL,
-            initialConfiguration = configurationFromConsul ?: config,
-            currentConfiguration = configurationFromConsul,
+            initialConfiguration = config,
+            currentConfiguration = configurationFromConsul ?: config,
             consulKey = consulKey,
             createdDate = null
         )

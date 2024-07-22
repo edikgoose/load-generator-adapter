@@ -105,7 +105,7 @@ class LoadTestView(
             addColumn({ it.status }).setHeader("Status")
             addColumn({ it.stage ?: LoadTestStage.UNKNOWN }).setHeader("Stage")
             addComponentColumn { it: LoadTestOutputDto ->
-                RouterLink(it.id.toString(), ScenarioView::class.java)
+                RouterLink(it.scenario.id.toString(), ScenarioView::class.java)
             }.setHeader("Scenario ID")
             addColumn({
                 if (it.scenario.name.length > 20) {

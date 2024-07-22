@@ -38,6 +38,7 @@ class YandexTankTestConfigService(
         val influxConfig = mutableMapOf<String, Any>()
         influxConfig["enabled"] = true
         influxConfig["database"] = "metrics"
+        influxConfig["labeled"] = true
         influxConfig["prefix_measurement"] = "${newPrefix}_"
         influxConfig["address"] = influxProperties.address
         influxConfig["port"] = influxProperties.port.toInt()

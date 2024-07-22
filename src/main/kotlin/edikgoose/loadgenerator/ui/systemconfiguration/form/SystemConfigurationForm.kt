@@ -81,11 +81,11 @@ class SystemConfigurationForm (
         isConsul.addValueChangeListener {
             if (isConsul.value) {
                 initialConfig.clear()
-                initialConfig.isReadOnly = true
+//                initialConfig.isReadOnly = true
                 if (isForCreation) getConsulValue.isVisible = true
                 consulKey.isVisible = true
             } else {
-                initialConfig.isReadOnly = false
+//                initialConfig.isReadOnly = false
                 getConsulValue.isVisible = false
                 consulKey.isVisible = false
             }

@@ -1,8 +1,7 @@
 version: '3.0'
 
 networks:
-  foodapi_network:
-    external: true
+  orchestrator:
 
 services:
   tank-server:
@@ -17,9 +16,9 @@ services:
     ports:
       - "8887:8888"
     volumes:
-      - ${PWD}/tests:/var/loadtest
+      - ./tests:/var/loadtest
     networks: &network
-      - foodapi_network
+      - orchestrator
     deploy:
       resources:
         limits:
@@ -42,9 +41,9 @@ services:
     ports:
       - "3001:3000"
     volumes:
-      - ${PWD}/grafana/provisioning:/etc/grafana/provisioning/
-      - ${PWD}/grafana/data/dashboards:/var/lib/grafana/dashboards/
-      - ${PWD}/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana/provisioning:/etc/grafana/provisioning/
+      - ./grafana/data/dashboards:/var/lib/grafana/dashboards/
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
@@ -76,6 +75,7 @@ services:
       - DB_PASSWORD=password
       - CONSUL_URL=http://consul:8500
       - YANDEX_TANK_BASE_URL=http://tank-server:8888
+      - GRAFANA_BASE_URL=http://localhost:3001
 
   consul:
     image: hashicorp/consul:1.18
